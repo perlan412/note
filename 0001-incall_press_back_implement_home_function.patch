@@ -1,0 +1,138 @@
+From 0dae25cd5f0336964925cd6526b919344262768a Mon Sep 17 00:00:00 2001
+From: chongming <chongming_li>
+Date: Fri, 8 Sep 2017 15:02:20 +0800
+Subject: [PATCH] =?UTF-8?q?=E6=8C=89=E8=BF=94=E5=9B=9E=E9=94=AE=E5=88=87?=
+ =?UTF-8?q?=E6=8D=A2=E5=90=8E=E5=8F=B0=E9=80=9A=E8=AF=9D?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ .../internal/policy/impl/PhoneWindowManager.java   | 50 +++++++++++++++++++++-
+ .../apps/InCallUI/res/values-zh-rCN/strings_ex.xml |  2 +-
+ .../apps/InCallUI/res/values-zh-rTW/strings_ex.xml |  2 +-
+ packages/apps/InCallUI/res/values/strings_ex.xml   |  2 +-
+ 4 files changed, 52 insertions(+), 4 deletions(-)
+
+diff --git a/frameworks/base/policy/src/com/android/internal/policy/impl/PhoneWindowManager.java b/frameworks/base/policy/src/com/android/internal/policy/impl/PhoneWindowManager.java
+index db49864..946a8b0 100644
+--- a/frameworks/base/policy/src/com/android/internal/policy/impl/PhoneWindowManager.java
++++ b/frameworks/base/policy/src/com/android/internal/policy/impl/PhoneWindowManager.java
+@@ -21,6 +21,7 @@ import android.app.ActivityManager.RunningTaskInfo;
+ /* YUNOS END */
+ import android.app.ActivityManagerNative;
+ import android.app.AppOpsManager;
++import android.app.Instrumentation;
+ import android.app.IUiModeManager;
+ import android.app.ProgressDialog;
+ import android.app.SearchManager;
+@@ -1994,6 +1995,34 @@ public class PhoneWindowManager implements WindowManagerPolicy {
+             WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
+             WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
+         };
++    private boolean interceptBack = false;
++
++    public static final String[] BACK_TO_LAUNCHER_APPS = {
++           "com.android.incallui.InCallActivity"
++    };
++
++    private boolean backToLauncher() {
++        String className = null;
++        ActivityManager mActivityManager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
++        List<RunningTaskInfo> list = mActivityManager.getRunningTasks(1);
++        if (!list.isEmpty() && list.get(0) != null && list.get(0).topActivity != null) {
++            className = list.get(0).topActivity.getClassName();
++        }
++        for (String classname: BACK_TO_LAUNCHER_APPS) {
++            if (className != null && className.contains(classname)) {
++                Slog.i(TAG, "back to launcher for : " + className);
++                return true;
++            }
++        }
++        return false;
++    }
++
++    private final Runnable mHomeKeyHandler = new Runnable() {
++            @Override
++            public void run() {
++                    new Instrumentation().sendKeyDownUpSync(KeyEvent.KEYCODE_HOME);
++            }
++    };
+ 
+     /** {@inheritDoc} */
+     @Override
+@@ -2311,12 +2340,31 @@ public class PhoneWindowManager implements WindowManagerPolicy {
+             return -1;
+             /* SPRD: add home-key pressed interface @{ */
+         } else if (keyCode == KeyEvent.KEYCODE_BACK) {
+-            if (!down) mIsHomeKeyPressed.set(false);
++            //if (!down) mIsHomeKeyPressed.set(false);
+             /* SPRD: back key call scheduleButtonLightTimeout(long now). @{ */
+             if(mKeyguardDelegate != null && !mKeyguardDelegate.isShowing()){
+                 mPowerManager.scheduleButtonLightTimeout(SystemClock.uptimeMillis());
+             }
+             /* @} */
++            if (!keyguardOn && down && repeatCount == 0) {
++                ITelephony telephonyService = getTelephonyService();
++				try {
++                if (backToLauncher() && telephonyService != null && telephonyService.isOffhook()) {
++                     Slog.i(TAG, "go to home when InCall");
++                     mHandler.removeCallbacks(mHomeKeyHandler);   //first way
++                     mHandler.post(mHomeKeyHandler);              //first way
++                     //goHome();                                  //second way
++                     interceptBack = true;
++                     return -1;
++                }
++				} catch (RemoteException ex) {
++                   Log.w(TAG, "ITelephony threw RemoteException", ex);
++               }
++            }
++            if(!down && interceptBack) {
++                interceptBack = false;
++                return -1;
++            }
+             /* @} */
+         }
+ 
+diff --git a/packages/apps/InCallUI/res/values-zh-rCN/strings_ex.xml b/packages/apps/InCallUI/res/values-zh-rCN/strings_ex.xml
+index e7fe8c1..df99935 100644
+--- a/packages/apps/InCallUI/res/values-zh-rCN/strings_ex.xml
++++ b/packages/apps/InCallUI/res/values-zh-rCN/strings_ex.xml
+@@ -52,7 +52,7 @@
+     <string name="onscreenStopMuteText">"取消静音"</string>
+     <string name="onscreenAnswerText">"接听"</string>
+     <string name="onscreenRejectMessageText">"短信拒接"</string>
+-    <string name="onscreenHangupText">"挂断"</string>
++    <string name="onscreenHangupText">"返回"</string>
+     <string name="onscreenOptionText">"选项"</string>
+     <string name="onscreenBackText">"返回"</string>
+     <!-- SPRD:bug651194 fail reject to send sms @{ -->
+diff --git a/packages/apps/InCallUI/res/values-zh-rTW/strings_ex.xml b/packages/apps/InCallUI/res/values-zh-rTW/strings_ex.xml
+index 392ccc1..4cd60ca 100644
+--- a/packages/apps/InCallUI/res/values-zh-rTW/strings_ex.xml
++++ b/packages/apps/InCallUI/res/values-zh-rTW/strings_ex.xml
+@@ -50,7 +50,7 @@
+     <string name="onscreenStopMuteText">"取消靜音"</string>
+     <string name="onscreenAnswerText">"接聽"</string>
+     <string name="onscreenRejectMessageText">"簡訊拒接"</string>
+-    <string name="onscreenHangupText">"掛斷"</string>
++    <string name="onscreenHangupText">"返回"</string>
+     <string name="onscreenOptionText">"選項"</string>
+     <string name="onscreenBackText">"返回"</string>
+ </resources>
+diff --git a/packages/apps/InCallUI/res/values/strings_ex.xml b/packages/apps/InCallUI/res/values/strings_ex.xml
+index d60f99c..c5c1773 100755
+--- a/packages/apps/InCallUI/res/values/strings_ex.xml
++++ b/packages/apps/InCallUI/res/values/strings_ex.xml
+@@ -59,7 +59,7 @@
+     <string name="onscreenStopMuteText">"Unmute"</string>
+     <string name="onscreenAnswerText">"Answer"</string>
+     <string name="onscreenRejectMessageText">"Reject message"</string>
+-    <string name="onscreenHangupText">"Hang up"</string>
++    <string name="onscreenHangupText">"Back"</string>
+     <string name="onscreenOptionText">"Options"</string>
+     <string name="onscreenBackText">"Back"</string>
+     <!-- SPRD:bug651194 fail reject to send sms @{ -->
+-- 
+1.9.1
+
