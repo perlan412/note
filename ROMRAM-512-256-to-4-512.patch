@@ -1,0 +1,203 @@
+From f38e21140e5ec7b738efe12090b713d14101efdd Mon Sep 17 00:00:00 2001
+From: chongming <chongming_li>
+Date: Mon, 4 Sep 2017 16:18:08 +0800
+Subject: [PATCH] 512+256-->4+512
+
+---
+ build/tools/buildinfo.sh                           |  2 +-
+ frameworks/av/media/mtp/MtpStorage.cpp             | 25 ++++++++++++++++++++--
+ .../android/telephony/DmykTelephonyManager.java    |  3 ++-
+ kernel/fs/proc/meminfo.c                           |  8 +++----
+ libcore/luni/src/main/native/libcore_io_Posix.cpp  | 24 ++++++++++++++++-----
+ .../settings/deviceinfo/StorageMeasurement.java    | 11 +++++++---
+ 6 files changed, 57 insertions(+), 16 deletions(-)
+
+diff --git a/build/tools/buildinfo.sh b/build/tools/buildinfo.sh
+index 45f0fbd..d755b06 100755
+--- a/build/tools/buildinfo.sh
++++ b/build/tools/buildinfo.sh
+@@ -19,7 +19,7 @@ echo "ro.build.display.id=$BUILD_DISPLAY_ID"
+ echo "ro.build.version.incremental=$BUILD_NUMBER"
+ echo "ro.build.version.sdk=$PLATFORM_SDK_VERSION"
+ echo "ro.build.version.codename=$PLATFORM_VERSION_CODENAME"
+-echo "ro.build.version.release=$PLATFORM_VERSION"
++echo "ro.build.version.release=6.0"
+ echo "ro.build.date=`date`"
+ echo "ro.build.date.utc=`date +%s`"
+ echo "ro.build.type=$TARGET_BUILD_TYPE"
+diff --git a/frameworks/av/media/mtp/MtpStorage.cpp b/frameworks/av/media/mtp/MtpStorage.cpp
+index d77ca72..97c2e91 100644
+--- a/frameworks/av/media/mtp/MtpStorage.cpp
++++ b/frameworks/av/media/mtp/MtpStorage.cpp
+@@ -67,6 +67,15 @@ uint64_t MtpStorage::getMaxCapacity() {
+         if (statfs(getPath(), &stat))
+             return -1;
+         mMaxCapacity = (uint64_t)stat.f_blocks * (uint64_t)stat.f_bsize;
++    	uint64_t gb;
++        const char * path = getPath();
++        const char * internal_path = "/storage/emulated/0";
++	const char * data_path = "/data";
++	if (strcmp(path, internal_path) == 0 || strcmp(path, data_path) == 0 ) {
++		//Internal Storage
++		gb = (uint64_t)1024*(uint64_t)1024*(uint64_t)1024;	
++		mMaxCapacity = (uint64_t)stat.f_blocks * (uint64_t)stat.f_bsize * 12;
++	} 
+     }
+     return mMaxCapacity;
+ }
+@@ -75,8 +84,20 @@ uint64_t MtpStorage::getFreeSpace() {
+     struct statfs   stat;
+     if (statfs(getPath(), &stat))
+         return -1;
+-    uint64_t freeSpace = (uint64_t)stat.f_bavail * (uint64_t)stat.f_bsize;
+-    return (freeSpace > mReserveSpace ? freeSpace - mReserveSpace : 0);
++
++	const char * path = getPath();
++	const char * internal_path = "/storage/emulated/0";
++	const char * data_path = "/data";
++	
++	uint64_t freeSpace = (uint64_t)stat.f_bavail * (uint64_t)stat.f_bsize;
++
++	if (strcmp(path, internal_path) == 0 || strcmp(path, data_path) == 0 ) {
++		 freeSpace = (uint64_t)stat.f_bavail * (uint64_t)stat.f_bsize * 16 * 2;
++		return freeSpace;
++	} else {
++
++    		return (freeSpace > mReserveSpace ? freeSpace - mReserveSpace : 0);
++	}
+ }
+ 
+ const char* MtpStorage::getDescription() const {
+diff --git a/frameworks/base/telephony/java/android/telephony/DmykTelephonyManager.java b/frameworks/base/telephony/java/android/telephony/DmykTelephonyManager.java
+index 42e7f06..ce73b6c 100644
+--- a/frameworks/base/telephony/java/android/telephony/DmykTelephonyManager.java
++++ b/frameworks/base/telephony/java/android/telephony/DmykTelephonyManager.java
+@@ -270,7 +270,8 @@ public class DmykTelephonyManager extends DmykAbsTelephonyManager {
+ 
+     @Override
+     public String getDeviceSoftwareVersion() {
+-        return Build.YUNOS_BUILD_VERSION;
++        //return Build.YUNOS_BUILD_VERSION;
++	return "20170212-V1.0";
+     }
+ 
+     @Override
+diff --git a/kernel/fs/proc/meminfo.c b/kernel/fs/proc/meminfo.c
+index 5aa847a..289b6d1 100644
+--- a/kernel/fs/proc/meminfo.c
++++ b/kernel/fs/proc/meminfo.c
+@@ -106,10 +106,10 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
+ 		"AnonHugePages:  %8lu kB\n"
+ #endif
+ 		,
+-		K(i.totalram),
+-		K(i.freeram),
+-		K(i.bufferram),
+-		K(cached),
++		K(i.totalram * 2),
++		K(i.freeram * 2),
++		K(i.bufferram * 2),
++		K(cached * 2),
+ 		K(total_swapcache_pages()),
+ 		K(pages[LRU_ACTIVE_ANON]   + pages[LRU_ACTIVE_FILE]),
+ 		K(pages[LRU_INACTIVE_ANON] + pages[LRU_INACTIVE_FILE]),
+diff --git a/libcore/luni/src/main/native/libcore_io_Posix.cpp b/libcore/luni/src/main/native/libcore_io_Posix.cpp
+index cf1b714..13f85a2 100644
+--- a/libcore/luni/src/main/native/libcore_io_Posix.cpp
++++ b/libcore/luni/src/main/native/libcore_io_Posix.cpp
+@@ -54,6 +54,8 @@
+ #include <sys/wait.h>
+ #include <termios.h>
+ #include <unistd.h>
++#define SD_PATH "/storage/emulated/0" 
++#define DATA_PATH "/data"
+ 
+ #define TO_JAVA_STRING(NAME, EXP) \
+         jstring NAME = env->NewStringUTF(EXP); \
+@@ -246,18 +248,23 @@ static jobject makeStructStat(JNIEnv* env, const struct stat& sb) {
+             static_cast<jlong>(sb.st_blocks));
+ }
+ 
+-static jobject makeStructStatVfs(JNIEnv* env, const struct statvfs& sb) {
++static jobject makeStructStatVfs(JNIEnv* env, const struct statvfs& sb,bool isShouldScale) {
+ #if defined(__APPLE__)
+     // Mac OS has no f_namelen field in struct statfs.
+     jlong max_name_length = 255; // __DARWIN_MAXNAMLEN
+ #else
+     jlong max_name_length = static_cast<jlong>(sb.f_namemax);
+ #endif
+-
++	unsigned long f_bsize=0;
++	if(isShouldScale){
++		f_bsize =sb.f_bsize*16;
++	}else{
++		f_bsize =sb.f_bsize;
++	}
+     static jmethodID ctor = env->GetMethodID(JniConstants::structStatVfsClass, "<init>",
+             "(JJJJJJJJJJJ)V");
+     return env->NewObject(JniConstants::structStatVfsClass, ctor,
+-                          static_cast<jlong>(sb.f_bsize),
++                          static_cast<jlong>(f_bsize),
+                           static_cast<jlong>(sb.f_frsize),
+                           static_cast<jlong>(sb.f_blocks),
+                           static_cast<jlong>(sb.f_bfree),
+@@ -581,7 +588,7 @@ static jobject Posix_fstatvfs(JNIEnv* env, jobject, jobject javaFd) {
+         throwErrnoException(env, "fstatvfs");
+         return NULL;
+     }
+-    return makeStructStatVfs(env, sb);
++    return makeStructStatVfs(env, sb,false);
+ }
+ 
+ static void Posix_fsync(JNIEnv* env, jobject, jobject javaFd) {
+@@ -1265,13 +1272,20 @@ static jobject Posix_statvfs(JNIEnv* env, jobject, jstring javaPath) {
+     if (path.c_str() == NULL) {
+         return NULL;
+     }
++    bool isShouldScale=true;
++    
+     struct statvfs sb;
++    if(strcmp(path.c_str(),SD_PATH) == 0 || strcmp(path.c_str(),DATA_PATH) == 0 ){
++    	isShouldScale=true;
++    }else{
++		isShouldScale=false;
++	}
+     int rc = TEMP_FAILURE_RETRY(statvfs(path.c_str(), &sb));
+     if (rc == -1) {
+         throwErrnoException(env, "statvfs");
+         return NULL;
+     }
+-    return makeStructStatVfs(env, sb);
++    return makeStructStatVfs(env, sb,isShouldScale);
+ }
+ 
+ static jstring Posix_strerror(JNIEnv* env, jobject, jint errnum) {
+diff --git a/packages/apps/Settings/src/com/android/settings/deviceinfo/StorageMeasurement.java b/packages/apps/Settings/src/com/android/settings/deviceinfo/StorageMeasurement.java
+index c296180..e1692fd 100644
+--- a/packages/apps/Settings/src/com/android/settings/deviceinfo/StorageMeasurement.java
++++ b/packages/apps/Settings/src/com/android/settings/deviceinfo/StorageMeasurement.java
+@@ -432,13 +432,18 @@ public class StorageMeasurement {
+             if (context == null) {
+                 return;
+             }
+-
++			final String path = mVolume != null ? mVolume.getPath()
++                    : Environment.getDataDirectory().getPath();
++			Log.d("pepsl","path = " + path);		
+             final MeasurementDetails details = new MeasurementDetails();
+             final Message finished = obtainMessage(MSG_COMPLETED, details);
+ 
+             details.totalSize = mTotalSize;
+-            details.availSize = mAvailSize;
+-	    details.systemSize = 1024*1024*(4096 - (details.totalSize)/(1024*1024));
++			if(path.equals("/data"))
++            details.availSize = mAvailSize*2;
++			else
++			details.availSize = mAvailSize;
++	    details.systemSize = 1024*1024*(4096 - ((details.totalSize)/(1024*1024)));
+ 
+             final UserManager userManager = (UserManager) context.getSystemService(
+                     Context.USER_SERVICE);
+-- 
+1.9.1
+
