@@ -1,0 +1,217 @@
+From 5b337a41c4ac84ab29102e3bfb3479136e47dea3 Mon Sep 17 00:00:00 2001
+From: chongming <chongming_li>
+Date: Fri, 16 Jun 2017 14:52:04 +0800
+Subject: [PATCH] =?UTF-8?q?=E5=A2=9E=E5=8A=A0=E6=89=8B=E6=9C=BA=E8=81=94?=
+ =?UTF-8?q?=E7=B3=BB=E4=BA=BA=E5=AD=98=E5=82=A8=E7=8A=B6=E6=80=81?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ packages/apps/Contacts/res/menu/people_options.xml |  2 +-
+ .../apps/Contacts/res/values-zh-rCN/strings.xml    |  1 +
+ packages/apps/Contacts/res/values/strings.xml      |  1 +
+ .../contacts/activities/PeopleActivity.java        |  2 +-
+ .../activities/ContactsMemoryActivity.java         | 17 +++++++++--------
+ .../common/list/ContactMemoryListView.java         | 22 +++++++++++++++++-----
+ 6 files changed, 30 insertions(+), 15 deletions(-)
+
+diff --git a/packages/apps/Contacts/res/menu/people_options.xml b/packages/apps/Contacts/res/menu/people_options.xml
+index e85416a..7b48866 100644
+--- a/packages/apps/Contacts/res/menu/people_options.xml
++++ b/packages/apps/Contacts/res/menu/people_options.xml
+@@ -70,5 +70,5 @@
+         android:title="@string/menu_add_favorite"/>
+     <item
+         android:id="@+id/sim_capacity"
+-        android:title="@string/sim_capacity"/>
++        android:title="@string/contacts_memory"/>
+ </menu>
+diff --git a/packages/apps/Contacts/res/values-zh-rCN/strings.xml b/packages/apps/Contacts/res/values-zh-rCN/strings.xml
+index 64a0b00..9341ae3 100644
+--- a/packages/apps/Contacts/res/values-zh-rCN/strings.xml
++++ b/packages/apps/Contacts/res/values-zh-rCN/strings.xml
+@@ -431,4 +431,5 @@
+     <string name="no_account_to_edit">系统无账户保存联系人，不能创建联系人。</string>
+     <string name="only_other_number_type">不可只保存一个其他类型号码，请检查。</string>
+     <string name="dup_phone_number_type">不可保存同类型的号码，请检查。</string>
++    <string name="contacts_memory">联系人存储状态</string>
+ </resources>
+diff --git a/packages/apps/Contacts/res/values/strings.xml b/packages/apps/Contacts/res/values/strings.xml
+index 36eee98..60c1f02 100644
+--- a/packages/apps/Contacts/res/values/strings.xml
++++ b/packages/apps/Contacts/res/values/strings.xml
+@@ -919,4 +919,5 @@
+     <string name="no_account_to_edit">System no account to save contact, and it can not to create contacts.</string>
+     <string name="only_other_number_type">Cannot save only one other number, please check it.</string>
+     <string name="dup_phone_number_type">Cannot save numbers of same type, please check it.</string>
++    <string name="contacts_memory">Contacts memory</string>
+ </resources>
+diff --git a/packages/apps/Contacts/src/com/android/contacts/activities/PeopleActivity.java b/packages/apps/Contacts/src/com/android/contacts/activities/PeopleActivity.java
+index ef64163..79dfb80 100755
+--- a/packages/apps/Contacts/src/com/android/contacts/activities/PeopleActivity.java
++++ b/packages/apps/Contacts/src/com/android/contacts/activities/PeopleActivity.java
+@@ -280,7 +280,7 @@ public class PeopleActivity extends ContactsActivity
+         dataList.add(new MenuBean(getResources().getString(R.string.menu_new_contact_action_bar),CLICK_ONE));
+         dataList.add(new MenuBean(getResources().getString(R.string.menu_import_export), CLICK_TWO));
+         dataList.add(new MenuBean(getResources().getString(R.string.menu_batch_delete), CLICK_THREE));
+-        dataList.add(new MenuBean(getResources().getString(R.string.sim_capacity), CLICK_FOUR));
++        dataList.add(new MenuBean(getResources().getString(R.string.contacts_memory), CLICK_FOUR));
+         return dataList;
+     }
+     private static final int TAB_FADE_IN_DURATION = 500;
+diff --git a/packages/apps/Contacts/src/com/sprd/contacts/activities/ContactsMemoryActivity.java b/packages/apps/Contacts/src/com/sprd/contacts/activities/ContactsMemoryActivity.java
+index 56e8152..f970b55 100644
+--- a/packages/apps/Contacts/src/com/sprd/contacts/activities/ContactsMemoryActivity.java
++++ b/packages/apps/Contacts/src/com/sprd/contacts/activities/ContactsMemoryActivity.java
+@@ -33,6 +33,7 @@ public class ContactsMemoryActivity extends Activity {
+     private static final int FILTER_LOADER_ID = 0;
+     private static final String SIM_ACCOUNT_TYPE = "sprd.com.android.account.sim";
+     private static final String USIM_ACCOUNT_TYPE = "sprd.com.android.account.usim";
++    private static final String PHONE_ACCOUNT_TYPE = "Local Phone Account";
+     private ListView mListView;
+     private TextView mEmptyView;
+     private FeatureBarHelper mFeatureBarHelper;
+@@ -56,13 +57,7 @@ public class ContactsMemoryActivity extends Activity {
+         mCenterSkView.setText("");
+         mRightSkView.setText(R.string.softkey_back);
+         mListView = (ListView) findViewById(android.R.id.list);
+-        if (hasSimAccount()) {
+-            getLoaderManager().initLoader(FILTER_LOADER_ID, null, new MyLoaderCallbacks());
+-        } else {
+-            mEmptyView = (TextView) findViewById(R.id.contact_sim_list_empty);
+-            mEmptyView.setText(getString(R.string.noSimCard));
+-            mListView.setEmptyView(mEmptyView);
+-        }
++        getLoaderManager().initLoader(FILTER_LOADER_ID, null, new MyLoaderCallbacks());
+     }
+ 
+     @Override
+@@ -90,6 +85,7 @@ public class ContactsMemoryActivity extends Activity {
+                 Log.e(TAG, "Failed to load filters");
+                 return;
+             }
++	    Log.e("RD", "onLoadFinished:" + data.size());
+             mListView.setAdapter(new FilterListAdapter(ContactsMemoryActivity.this, data));
+         }
+ 
+@@ -133,12 +129,15 @@ public class ContactsMemoryActivity extends Activity {
+         List<AccountWithDataSet> accounts = accountTypes.getAccounts(false);
+         for (AccountWithDataSet account : accounts) {
+             AccountType accountType = accountTypes.getAccountType(account.type, account.dataSet);
++            Log.e("RD", "accountType:" + account.type);
+             if (accountType.isExtension() && !account.hasData(context)
+                     || !(account.type).equals(SIM_ACCOUNT_TYPE)
+-                    && !(account.type).equals(USIM_ACCOUNT_TYPE)) {
++                    && !(account.type).equals(USIM_ACCOUNT_TYPE)
++                    && !(account.type).equals(PHONE_ACCOUNT_TYPE)) {
+                 // Hide extensions with no raw_contacts or no_sim accounts.
+                 continue;
+             }
++            Log.e("RD", "-----add loaded accountType:" + account.type);
+             Drawable icon = accountType != null ? accountType.getDisplayIcon(context, account) : null;
+             accountFilters.add(ContactListFilter.createAccountFilter(
+                     account.type, account.name, account.dataSet, icon));
+@@ -172,6 +171,7 @@ public class ContactsMemoryActivity extends Activity {
+ 
+         @Override
+         public int getCount() {
++            Log.e("RD", "getCount FilterListAdapter:" + mFilters.size());
+             return mFilters.size();
+         }
+ 
+@@ -195,6 +195,7 @@ public class ContactsMemoryActivity extends Activity {
+                         R.layout.contact_memory_list_item, parent, false);
+             }
+             final ContactListFilter filter = mFilters.get(position);
++            Log.e("RD", "getview:" + filter );
+             view.setContactListFilter(filter);
+             view.bindView(mAccountTypes);
+             return view;
+diff --git a/packages/apps/ContactsCommon/src/com/sprd/contacts/common/list/ContactMemoryListView.java b/packages/apps/ContactsCommon/src/com/sprd/contacts/common/list/ContactMemoryListView.java
+index 6fee00c..92c2725 100644
+--- a/packages/apps/ContactsCommon/src/com/sprd/contacts/common/list/ContactMemoryListView.java
++++ b/packages/apps/ContactsCommon/src/com/sprd/contacts/common/list/ContactMemoryListView.java
+@@ -18,7 +18,7 @@ import com.android.contacts.common.list.ContactListFilter;
+ import com.android.contacts.common.model.AccountTypeManager;
+ import com.android.contacts.common.model.account.AccountType;
+ import com.android.contacts.common.model.account.AccountWithDataSet;
+-
++import android.util.Log;
+ 
+ public class ContactMemoryListView extends LinearLayout {
+ 
+@@ -30,6 +30,7 @@ public class ContactMemoryListView extends LinearLayout {
+     private TextView mSimUsage;
+     private ContactListFilter mFilter;
+     private boolean mSingleAccount;
++    private static final String PHONE_ACCOUNT_TYPE = "Local Phone Account";
+ 
+     public ContactMemoryListView(Context context) {
+         super(context);
+@@ -41,6 +42,7 @@ public class ContactMemoryListView extends LinearLayout {
+ 
+     public void setContactListFilter(ContactListFilter filter) {
+         mFilter = filter;
++        Log.e("RD", "setContactListFilter mFilter=" + mFilter);
+     }
+ 
+     public void bindView(AccountTypeManager accountTypes) {
+@@ -49,7 +51,7 @@ public class ContactMemoryListView extends LinearLayout {
+             mAccountUserName = (TextView) findViewById(R.id.accountUserName);
+             mSimUsage = (TextView) findViewById(R.id.simUsage);
+         }
+-
++        Log.e("RD", "mFilter=" + mFilter);
+         if (mFilter == null) {
+             mAccountType.setText(R.string.contactsList);
+             return;
+@@ -58,6 +60,8 @@ public class ContactMemoryListView extends LinearLayout {
+                 mFilter.dataSet);
+         mAccountUserName.setText(mFilter.accountName);
+         mAccountType.setText(accountType.getDisplayLabel(getContext()));
++        Log.e("RD", "name:" + mFilter.accountName + ":" +
++accountType.getDisplayLabel(getContext()));
+ 
+         mAsyncTask = new AsyncTask<Void, Void, Void>() {
+ 
+@@ -73,7 +77,11 @@ public class ContactMemoryListView extends LinearLayout {
+             @Override
+             protected void onPostExecute(Void result) {
+                 if (mSimUsage != null) {
+-                    mSimUsage.setText(mVacancies + "/" + mCapacity);
++                    if (mCapacity == -1) {
++                        mSimUsage.setText("" + mVacancies);
++                    } else {
++                        mSimUsage.setText(mVacancies + "/" + mCapacity);
++                    }
+                 }
+                 super.onPostExecute(result);
+             }
+@@ -99,17 +107,21 @@ public class ContactMemoryListView extends LinearLayout {
+     private int getAccountUsage(Context context, ContactListFilter filter) {
+         ContentResolver cr = context.getContentResolver();
+         int providerCapacity = -1;
++        //Only 2 accounts type allowed, so if not phone account, assume it as sim
++        String condition = filter.accountType.equalsIgnoreCase(PHONE_ACCOUNT_TYPE) ? "deleted=0 ": "deleted=0 and sync1 != 'sdn'";
+         Cursor cursor = cr.query(RawContacts.CONTENT_URI.buildUpon()
+                 .appendQueryParameter(RawContacts.ACCOUNT_NAME, filter.accountName)
+                 .appendQueryParameter(RawContacts.ACCOUNT_TYPE, filter.accountType)
+                 .build(),
+-                null, "deleted=0 and sync1 != 'sdn'", null, null
++                null, condition, null, null
+                 );
+-
++        
++        Log.e("RD", "getAccountUsage2:" + filter.accountName + ":" + filter.accountType);
+         if (cursor != null) {
+             providerCapacity = cursor.getCount();
+             cursor.close();
+         }
++        Log.e("RD", "getAccountUsage:=" + providerCapacity);
+         return providerCapacity;
+     }
+ }
+-- 
+1.9.1
+
