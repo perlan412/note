@@ -1,0 +1,94 @@
+From 5be272e36664bfb8306bffceef1727ff0aabdf33 Mon Sep 17 00:00:00 2001
+From: chongming <chongming_li>
+Date: Fri, 18 Aug 2017 19:53:54 +0800
+Subject: [PATCH] =?UTF-8?q?=E9=94=81=E5=B1=8F=E7=95=8C=E9=9D=A2=E6=8C=891,?=
+ =?UTF-8?q?9=E6=8B=A8=E6=89=93=E7=B4=A7=E6=80=A5=E5=91=BC=E6=95=91?=
+ =?UTF-8?q?=E7=94=B5=E8=AF=9D?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ .../internal/policy/impl/PhoneWindowManager.java   | 24 ++++++++++++++++++++--
+ .../src/com/android/incallui/InCallPresenter.java  |  3 +--
+ .../src/com/android/phone/EmergencyDialer.java     |  1 +
+ 3 files changed, 24 insertions(+), 4 deletions(-)
+
+diff --git a/frameworks/base/policy/src/com/android/internal/policy/impl/PhoneWindowManager.java b/frameworks/base/policy/src/com/android/internal/policy/impl/PhoneWindowManager.java
+index 1ac6317..db49864 100644
+--- a/frameworks/base/policy/src/com/android/internal/policy/impl/PhoneWindowManager.java
++++ b/frameworks/base/policy/src/com/android/internal/policy/impl/PhoneWindowManager.java
+@@ -97,7 +97,7 @@ import android.view.WindowManagerPolicy;
+ import android.view.accessibility.AccessibilityEvent;
+ import android.view.animation.Animation;
+ import android.view.animation.AnimationUtils;
+-
++import android.net.Uri;
+ import com.android.internal.R;
+ import com.android.internal.policy.PolicyManager;
+ import com.android.internal.policy.impl.keyguard.KeyguardServiceDelegate;
+@@ -180,7 +180,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
+      */
+     public static AtomicBoolean mIsHomeKeyPressed = new AtomicBoolean(false);
+     /* @} */
+-
++    private static final String ACTION_EMERGENCY_DIAL = "com.android.phone.EmergencyDialer.DIAL";
+     /**
+      * These are the system UI flags that, when changing, can cause the layout
+      * of the screen to change.
+@@ -4088,6 +4088,26 @@ public class PhoneWindowManager implements WindowManagerPolicy {
+ 
+         // Handle special keys.
+         switch (keyCode) {
++		 /*SPRD:add the feature of emergency call in lock screen status @{*/
++            case KeyEvent.KEYCODE_1: {
++                if(down && keyguardActive && isScreenOn) {
++                    Intent intent = new Intent(ACTION_EMERGENCY_DIAL);
++                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
++                    intent.setData(Uri.fromParts("tel", "1", null));
++                    mContext.startActivity(intent);
++                   }
++                   break;
++                }
++            case KeyEvent.KEYCODE_9: {
++                if(down && keyguardActive && isScreenOn) {
++                        Intent intent = new Intent(ACTION_EMERGENCY_DIAL);
++                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
++                        intent.setData(Uri.fromParts("tel", "9", null));
++                        mContext.startActivity(intent);
++                    }
++                    break;
++                }
++            /*@}*/
+             case KeyEvent.KEYCODE_VOLUME_DOWN:
+             case KeyEvent.KEYCODE_VOLUME_UP:
+             case KeyEvent.KEYCODE_VOLUME_MUTE: {
+diff --git a/packages/apps/InCallUI/src/com/android/incallui/InCallPresenter.java b/packages/apps/InCallUI/src/com/android/incallui/InCallPresenter.java
+index 3d01c2f..6acce37 100644
+--- a/packages/apps/InCallUI/src/com/android/incallui/InCallPresenter.java
++++ b/packages/apps/InCallUI/src/com/android/incallui/InCallPresenter.java
+@@ -269,8 +269,7 @@ public class InCallPresenter implements CallList.Listener ,CallList.CallDisconne
+                 return;
+             }
+             /* @} */
+-            final boolean hasCall = callList.getActiveOrBackgroundCall() != null ||
+-                    callList.getOutgoingCall() != null;
++            final boolean hasCall = callList.getActiveOrBackgroundCall() != null;
+             mInCallActivity.dismissKeyguard(hasCall);
+         }
+     }
+diff --git a/packages/services/Telephony/src/com/android/phone/EmergencyDialer.java b/packages/services/Telephony/src/com/android/phone/EmergencyDialer.java
+index f90c345..52297cc 100644
+--- a/packages/services/Telephony/src/com/android/phone/EmergencyDialer.java
++++ b/packages/services/Telephony/src/com/android/phone/EmergencyDialer.java
+@@ -225,6 +225,7 @@ public class EmergencyDialer extends Activity implements View.OnClickListener,
+             String number = PhoneNumberUtils.getNumberFromIntent(getIntent(), this);
+             if (number != null) {
+                 mDigits.setText(number);
++				mDigits.setSelection(mDigits.getText().length());
+             }
+         }
+ 
+-- 
+1.9.1
+
