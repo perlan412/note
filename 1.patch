@@ -1,0 +1,66 @@
+diff --git a/frameworks/base/policy/src/com/android/internal/policy/impl/PhoneWindowManager.java b/frameworks/base/policy/src/com/android/internal/policy/impl/PhoneWindowManager.java
+index c2c15c2..768470d 100644
+--- a/frameworks/base/policy/src/com/android/internal/policy/impl/PhoneWindowManager.java
++++ b/frameworks/base/policy/src/com/android/internal/policy/impl/PhoneWindowManager.java
+@@ -502,6 +502,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
+     private static final int MSG_DISABLE_POINTER_LOCATION = 2;
+     private static final int MSG_DISPATCH_MEDIA_KEY_WITH_WAKE_LOCK = 3;
+     private static final int MSG_DISPATCH_MEDIA_KEY_REPEAT_WITH_WAKE_LOCK = 4;
++    
++    private boolean interceptAllKey=false;
+ 
+     private class PolicyHandler extends Handler {
+         @Override
+@@ -887,6 +889,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
+             }
+         });
+     }
++    
+ 
+     /** {@inheritDoc} */
+     @Override
+@@ -966,6 +969,11 @@ public class PhoneWindowManager implements WindowManagerPolicy {
+         context.registerReceiver(shutdownDisableOrintationReceiver, shutdownDialogFilter);
+         /* @} */
+ 
++		filter=new IntentFilter();
++		filter.addAction("com.simservice.startview");
++		filter.addAction("com.simservice.endview");
++		context.registerReceiver(mInterceptyKey,filter);
++		
+         // register for dream-related broadcasts
+         filter = new IntentFilter();
+         filter.addAction(Intent.ACTION_DREAMING_STARTED);
+@@ -2015,6 +2023,15 @@ public class PhoneWindowManager implements WindowManagerPolicy {
+                     + repeatCount + " keyguardOn=" + keyguardOn + " mHomePressed=" + mHomePressed
+                     + " canceled=" + canceled);
+         }
++        if(down == true && repeatCount==0){
++        	Intent mIntent=new Intent();
++        	mIntent.putExtra("key_action", event);
++			mIntent.setAction("com.android.key.action");
++			mContext.sendBroadcast(mIntent);
++        }
++        if(interceptAllKey){
++        	return -1;
++        }
+         //}
+         /* @} */
+ 
+@@ -4482,6 +4499,16 @@ public class PhoneWindowManager implements WindowManagerPolicy {
+             }
+         }
+     };
++     BroadcastReceiver mInterceptyKey = new BroadcastReceiver() {
++        @Override
++        public void onReceive(Context context, Intent intent) {
++            if(intent.getAction().equals("com.simservice.startview")){
++            	interceptAllKey=true;
++            }else if(intent.getAction().equals("com.simservice.endview")){
++            	interceptAllKey=false;
++            }
++        }
++    };
+ 
+     BroadcastReceiver mMultiuserReceiver = new BroadcastReceiver() {
+         @Override
