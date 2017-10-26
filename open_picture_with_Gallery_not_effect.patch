@@ -1,0 +1,91 @@
+From 3163a54b9b62e3f07bba53bbb4691f237ad45b25 Mon Sep 17 00:00:00 2001
+From: chongming <chongming_li@xunrui.com.cn>
+Date: Sun, 12 Mar 2017 13:19:13 +0800
+Subject: [PATCH] =?UTF-8?q?=E5=9B=BE=E5=BA=93=E9=80=89=E6=8B=A9=E5=A7=8B?=
+ =?UTF-8?q?=E7=BB=88=E6=89=93=E5=BC=80=E5=9B=BE=E7=89=87=E5=90=8E=E4=BE=9D?=
+ =?UTF-8?q?=E6=97=A7=E5=BC=B9=E5=87=BA=E9=80=89=E9=A1=B9=E6=A1=86?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ .../com/android/server/pm/PreferredComponent.java   | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
+
+diff --git a/frameworks/base/services/core/java/com/android/server/pm/PreferredComponent.java b/frameworks/base/services/core/java/com/android/server/pm/PreferredComponent.java
+index 8e2e0cd..3585dae 100644
+--- a/frameworks/base/services/core/java/com/android/server/pm/PreferredComponent.java
++++ b/frameworks/base/services/core/java/com/android/server/pm/PreferredComponent.java
+@@ -26,6 +26,7 @@ import android.content.ComponentName;
+ import android.content.IntentFilter;
+ import android.content.pm.ActivityInfo;
+ import android.content.pm.ResolveInfo;
++import android.util.Log;
+ import android.util.Slog;
+ 
+ import java.io.IOException;
+@@ -39,6 +40,8 @@ public class PreferredComponent {
+     private static final String ATTR_NAME = "name"; // component name
+     private static final String ATTR_SET = "set"; // number
+ 
++    private static final String[] REMOVE_APP={"com.UCMobile"};
++
+     public final int mMatch;
+     public final ComponentName mComponent;
+     // Whether this is to be the one that's always chosen. If false, it's the most recently chosen.
+@@ -52,6 +55,8 @@ public class PreferredComponent {
+ 
+     private final Callbacks mCallbacks;
+ 
++    private int mRemoveAppCount=0;
++
+     public interface Callbacks {
+         public boolean onReadTag(String tagName, XmlPullParser parser)
+                 throws XmlPullParserException, IOException;
+@@ -192,6 +197,16 @@ public class PreferredComponent {
+         }
+     }
+ 
++    private boolean isRemoveApp(String packageName){
++        for(int i=0;i< REMOVE_APP.length;i++){
++            if(packageName.equals(REMOVE_APP[i])){
++                mRemoveAppCount++;
++                return true;
++            }
++        }
++        return false;
++    }
++
+     public boolean sameSet(List<ResolveInfo> query) {
+         if (mSetPackages == null) {
+             return query == null;
+@@ -201,6 +216,7 @@ public class PreferredComponent {
+         }
+         final int NQ = query.size();
+         final int NS = mSetPackages.length;
++        mRemoveAppCount=0;
+ 
+         int numMatch = 0;
+         for (int i=0; i<NQ; i++) {
+@@ -209,7 +225,7 @@ public class PreferredComponent {
+             boolean good = false;
+             for (int j=0; j<NS; j++) {
+                 if (mSetPackages[j].equals(ai.packageName)
+-                        && mSetClasses[j].equals(ai.name)) {
++                        && mSetClasses[j].equals(ai.name) || isRemoveApp(ai.packageName)) {
+                     numMatch++;
+                     good = true;
+                     break;
+@@ -217,7 +233,8 @@ public class PreferredComponent {
+             }
+             if (!good) return false;
+         }
+-        return numMatch == NS;
++        Log.e("PreferredComponent","mRemoveAppCount++++++++++++++>>>"+mRemoveAppCount);
++        return numMatch == NS+mRemoveAppCount;
+     }
+ 
+     public boolean sameSet(ComponentName[] comps) {
+-- 
+1.9.1
+
