@@ -1,0 +1,31 @@
+From 5c866b7ce2b33996e9ec2d30c28f928d76f152c4 Mon Sep 17 00:00:00 2001
+From: chongming <chongming_li@xunrui.com.cn>
+Date: Wed, 11 Jan 2017 17:23:24 +0800
+Subject: [PATCH] =?UTF-8?q?user=E7=89=88=E6=9C=AC=E7=9B=B4=E6=8E=A5?=
+ =?UTF-8?q?=E8=BF=9B=E5=85=A5recovery=E6=A8=A1=E5=BC=8F=EF=BC=8C=E4=B8=8D?=
+ =?UTF-8?q?=E6=98=BE=E7=A4=BA=E6=9C=BA=E5=99=A8=E4=BA=BA=E5=80=92=E5=9C=B0?=
+ =?UTF-8?q?=E7=95=8C=E9=9D=A2?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ bootable/recovery/recovery.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/bootable/recovery/recovery.cpp b/bootable/recovery/recovery.cpp
+index 55ac8f7..82e7a53 100644
+--- a/bootable/recovery/recovery.cpp
++++ b/bootable/recovery/recovery.cpp
+@@ -1527,7 +1527,7 @@ main(int argc, char **argv) {
+         // http://b/17489952
+         // If this is an eng or userdebug build, automatically turn on the
+         // text display if no command is specified.
+-        if (is_ro_debuggable()) {
++        if (1) {
+             ui->ShowText(true);
+         }
+     }
+-- 
+1.9.1
+
