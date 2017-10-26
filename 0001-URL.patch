@@ -1,0 +1,41 @@
+From d4c37ac446c15848f2a08d17c6e600209829b1ff Mon Sep 17 00:00:00 2001
+From: chongming <chongming_li@xunrui.com.cn>
+Date: Tue, 7 Mar 2017 17:30:46 +0800
+Subject: [PATCH] =?UTF-8?q?=E6=8B=A6=E6=88=AA=E5=A4=A9=E5=A4=A9=E5=BF=AB?=
+ =?UTF-8?q?=E6=8A=A5=E6=9B=B4=E6=96=B0URL?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ libcore/luni/src/main/java/java/net/URLConnection.java | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/libcore/luni/src/main/java/java/net/URLConnection.java b/libcore/luni/src/main/java/java/net/URLConnection.java
+index 2fb3f45..20d0838 100644
+--- a/libcore/luni/src/main/java/java/net/URLConnection.java
++++ b/libcore/luni/src/main/java/java/net/URLConnection.java
+@@ -88,7 +88,7 @@ public abstract class URLConnection {
+     private static boolean defaultAllowUserInteraction;
+ 
+     private static boolean defaultUseCaches = true;
+-
++    private static String kuaibaoUpgradeURL="http://r.cnews.qq.com/extApkInfo";
+     ContentHandler defaultHandler = new DefaultContentHandler();
+ 
+     private long lastModified = -1;
+@@ -154,7 +154,10 @@ public abstract class URLConnection {
+      *            URLConnection} will point to.
+      */
+     protected URLConnection(URL url) {
+-        this.url = url;
++	if(url.toString().contains(kuaibaoUpgradeURL))
++           return;
++        else
++	   this.url = url;
+     }
+ 
+     /**
+-- 
+1.9.1
+
