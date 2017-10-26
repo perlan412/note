@@ -1,0 +1,76 @@
+From 69cc3fe606e0796df773dbaf47981a736d5dec49 Mon Sep 17 00:00:00 2001
+From: chongming <chongming_li@xunrui.com.cn>
+Date: Sat, 7 Jan 2017 20:51:45 +0800
+Subject: [PATCH] =?UTF-8?q?=E7=BD=91=E7=BB=9C=E9=80=89=E6=8B=A9=E6=A8=A1?=
+ =?UTF-8?q?=E5=BC=8F=E5=8F=AA=E4=BF=9D=E7=95=99LTE/TD-SCDMA/GSM?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ packages/services/Telephony/res/values-zh-rCN/strings_ex.xml          | 2 --
+ packages/services/Telephony/res/values-zh-rTW/strings_ex.xml          | 2 --
+ packages/services/Telephony/res/values/strings_ex.xml                 | 4 ----
+ .../Telephony/src/com/sprd/phone/TeleServicePluginsHelper.java        | 2 +-
+ 4 files changed, 1 insertion(+), 9 deletions(-)
+
+diff --git a/packages/services/Telephony/res/values-zh-rCN/strings_ex.xml b/packages/services/Telephony/res/values-zh-rCN/strings_ex.xml
+index d25328d..7e5acd3 100644
+--- a/packages/services/Telephony/res/values-zh-rCN/strings_ex.xml
++++ b/packages/services/Telephony/res/values-zh-rCN/strings_ex.xml
+@@ -63,8 +63,6 @@
+         <item>4G/3G/2G多模式</item>
+     </string-array>
+         <string-array name="lte_network_mode_choices">
+-        <item>仅GSM</item>
+-        <item>TD-SCDMA/GSM</item>
+         <item>LTE/TD-SCDMA/GSM (自动)</item>
+     </string-array>
+     <string-array name="lte_preferred_networks_choices_for_common">
+diff --git a/packages/services/Telephony/res/values-zh-rTW/strings_ex.xml b/packages/services/Telephony/res/values-zh-rTW/strings_ex.xml
+index 5c50347..74c5383 100644
+--- a/packages/services/Telephony/res/values-zh-rTW/strings_ex.xml
++++ b/packages/services/Telephony/res/values-zh-rTW/strings_ex.xml
+@@ -36,8 +36,6 @@
+         <item>4G/3G/2G多模式</item>
+     </string-array>
+     <string-array name="lte_network_mode_choices">
+-        <item>僅GSM</item>
+-        <item>TD-SCDMA/GSM</item>
+         <item>LTE/TD-SCDMA/GSM (自動)</item>
+     </string-array>
+     <string-array name="lte_preferred_networks_choices_for_common">
+diff --git a/packages/services/Telephony/res/values/strings_ex.xml b/packages/services/Telephony/res/values/strings_ex.xml
+index 8e01177..abfb45b 100644
+--- a/packages/services/Telephony/res/values/strings_ex.xml
++++ b/packages/services/Telephony/res/values/strings_ex.xml
+@@ -69,13 +69,9 @@
+         <item>"0"</item>
+     </string-array>
+         <string-array name="lte_network_mode_choices_values">
+-        <item>"4"</item>
+-        <item>"1"</item>
+         <item>"0"</item>
+     </string-array>
+     <string-array name="lte_network_mode_choices">
+-        <item>GSM only</item>
+-        <item>TD-SCDMA/GSM</item>
+         <item>LTE/TD-SCDMA/GSM (Auto)</item>
+     </string-array>
+     <!-- SPRD: Bug#474289 FAST DIAL FEATURE @{ -->
+diff --git a/packages/services/Telephony/src/com/sprd/phone/TeleServicePluginsHelper.java b/packages/services/Telephony/src/com/sprd/phone/TeleServicePluginsHelper.java
+index 095a7c4..8e0f140 100644
+--- a/packages/services/Telephony/src/com/sprd/phone/TeleServicePluginsHelper.java
++++ b/packages/services/Telephony/src/com/sprd/phone/TeleServicePluginsHelper.java
+@@ -110,7 +110,7 @@ public class TeleServicePluginsHelper {
+             }
+             if (/*mIsSupport3GOnly2GOnly*/TelephonyManager.getRadioCapbility().equals(RadioCapbility.TDD_CSFB)) {
+                 if (String.valueOf(PREFERRED_NETWORK_MODE_4G_3G_2G).equals(preferredNetworkMode)) {
+-                    mButtonLtePreferredNetworkMode.setValueIndex(2);
++                    mButtonLtePreferredNetworkMode.setValueIndex(0);
+                     mButtonLtePreferredNetworkMode.setSummary(mButtonLtePreferredNetworkMode.getEntry());
+                 } else if (String.valueOf(PREFERRED_NETWORK_MODE_3G_2G).equals(preferredNetworkMode)) {
+                     mButtonLtePreferredNetworkMode.setValueIndex(1);
+-- 
+1.9.1
+
