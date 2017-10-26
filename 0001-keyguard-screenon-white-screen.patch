@@ -1,0 +1,39 @@
+From 39d0f627482eea0d11006c0c50f71bc10037cc92 Mon Sep 17 00:00:00 2001
+From: zpa <zpa@gmail.com>
+Date: Thu, 15 Dec 2016 10:55:03 +0800
+Subject: [PATCH] =?UTF-8?q?=E4=BF=AE=E6=94=B9=E9=94=81=E5=B1=8F=E7=95=8C?=
+ =?UTF-8?q?=E9=9D=A2=E7=82=B9=E4=BA=AE=E5=B1=8F=E5=B9=95=E5=87=A0=E7=8E=87?=
+ =?UTF-8?q?=E7=99=BD=E5=B1=8F=E7=9A=84=E9=97=AE=E9=A2=98?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ .../src/com/android/systemui/statusbar/phone/PhoneStatusBar.java      | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/phone/PhoneStatusBar.java b/frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/phone/PhoneStatusBar.java
+index bdbed1d..a024680 100644
+--- a/frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/phone/PhoneStatusBar.java
++++ b/frameworks/base/packages/SystemUI/src/com/android/systemui/statusbar/phone/PhoneStatusBar.java
+@@ -1918,7 +1918,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
+                 if (DEBUG_MEDIA_FAKE_ARTWORK) {
+                     final int c = 0xFF000000 | (int)(Math.random() * 0xFFFFFF);
+                     Log.v(TAG, String.format("DEBUG_MEDIA: setting new color: 0x%08x", c));
+-                    mBackdropBack.setBackgroundColor(0xFFFFFFFF);
++                    //mBackdropBack.setBackgroundColor(0xFFFFFFFF);
+                     mBackdropBack.setImageDrawable(new ColorDrawable(c));
+                 } else {
+                     mBackdropBack.setImageBitmap(artworkBitmap);
+@@ -1975,7 +1975,7 @@ public class PhoneStatusBar extends BaseStatusBar implements DemoMode,
+                     if (DEBUG_MEDIA_FAKE_ARTWORK) {
+                         final int c = 0xFF000000 | (int) (Math.random() * 0xFFFFFF);
+                         Log.v(TAG, String.format("DEBUG_MEDIA: setting new color: 0x%08x", c));
+-                        mBackdropBack.setBackgroundColor(0xFFFFFFFF);
++                        //mBackdropBack.setBackgroundColor(0xFFFFFFFF);
+                         mBackdropBack.setImageDrawable(new ColorDrawable(c));
+                     } else {
+                         mBackdropBack.setImageDrawable(lockScreenWallpaper);
+-- 
+1.9.1
+
