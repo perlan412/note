@@ -1,0 +1,84 @@
+From 8149b6fd25edbb74cd072886667d27cdcdcf67fa Mon Sep 17 00:00:00 2001
+From: zpa <zpa@gmail.com>
+Date: Mon, 19 Dec 2016 17:27:50 +0800
+Subject: [PATCH] =?UTF-8?q?=E5=BC=80=E6=9C=BA=E7=AC=AC=E4=B8=80=E6=AC=A1?=
+ =?UTF-8?q?=E5=90=AF=E5=8A=A8=E5=B0=86=E5=8E=BB=E7=94=B5=E9=BB=98=E8=AE=A4?=
+ =?UTF-8?q?=E9=80=89=E6=8B=A9=E7=9A=84=E5=8D=A1=E8=AE=BE=E7=BD=AE=E4=B8=BA?=
+ =?UTF-8?q?null?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ packages/apps/Settings/AndroidManifest.xml         |  6 ++++
+ .../src/com/android/settings/BootReceiver.java     | 42 ++++++++++++++++++++++
+ 2 files changed, 48 insertions(+)
+ create mode 100644 packages/apps/Settings/src/com/android/settings/BootReceiver.java
+
+diff --git a/packages/apps/Settings/AndroidManifest.xml b/packages/apps/Settings/AndroidManifest.xml
+index 5c45f5e..3a1f65f 100644
+--- a/packages/apps/Settings/AndroidManifest.xml
++++ b/packages/apps/Settings/AndroidManifest.xml
+@@ -2935,5 +2935,11 @@
+             </intent-filter>
+         </activity>
+         <!-- @} -->
++        <receiver android:name="com.android.settings.BootReceiver">
++            <intent-filter android:priority="1000">
++                <action android:name="android.intent.action.BOOT_COMPLETED"/>
++            </intent-filter>
++        </receiver>
++
+     </application>
+ </manifest>
+diff --git a/packages/apps/Settings/src/com/android/settings/BootReceiver.java b/packages/apps/Settings/src/com/android/settings/BootReceiver.java
+new file mode 100644
+index 0000000..194a002
+--- /dev/null
++++ b/packages/apps/Settings/src/com/android/settings/BootReceiver.java
+@@ -0,0 +1,42 @@
++package com.android.settings;
++
++import android.telecom.TelecomManager;
++import android.util.Log;
++
++import android.content.BroadcastReceiver;
++import android.content.Context;
++import android.content.Intent;
++import android.content.SharedPreferences;
++
++/**
++ * 
++ * @author : zpa
++ * 
++ * @version : 1.0.0
++ * 
++ *          2016-12-19 下午4:42:57
++ * 
++ */
++public class BootReceiver extends BroadcastReceiver {
++
++	private SharedPreferences mPreferences = null;
++	private static final String NAME = "first.run";
++	private static final String KEY_NAME = "first_run";
++
++	@Override
++	public void onReceive(Context context, Intent intent) {
++		if (intent.getAction().equals(Intent.ACTION_BOOT_COMPLETED)) {
++			Log.e("BootReceiver", "First run ,setUserSelectedOutgoingPhoneAccount(null) ");
++			mPreferences = context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
++			if (mPreferences.getBoolean(KEY_NAME, true)) {
++				mPreferences.edit().putBoolean(KEY_NAME, false).commit();
++
++				TelecomManager telecomManager = TelecomManager.from(context);
++				telecomManager.setUserSelectedOutgoingPhoneAccount(null);
++
++			}
++		}
++
++	}
++
++}
+-- 
+1.9.1
+
