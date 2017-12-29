@@ -1,0 +1,1622 @@
+From 78c29abc2bcd24812c16dd8b20a54f423477e545 Mon Sep 17 00:00:00 2001
+From: chongming <chongming_li@xunrui.com.cn>
+Date: Tue, 26 Dec 2017 16:24:01 +0800
+Subject: [PATCH] =?UTF-8?q?=E5=85=81=E8=AE=B8=E9=80=9A=E8=AF=9D=E6=9F=A5?=
+ =?UTF-8?q?=E8=AF=A2=E8=AF=9D=E8=B4=B9?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ .../apps/Dialer/res/drawable-mdpi/hide_dialer.png  | Bin 0 -> 3046 bytes
+ .../Dialer/res/drawable-mdpi/ic_number_contact.png | Bin 1342 -> 3439 bytes
+ .../Dialer/res/drawable-mdpi/ic_number_delete.png  | Bin 1455 -> 3565 bytes
+ .../Dialer/res/drawable-mdpi/ic_number_dialer.png  | Bin 1336 -> 3477 bytes
+ packages/apps/Dialer/res/layout/dialpad.xml        |   5 +-
+ packages/apps/Dialer/res/values/colors.xml         |   2 +-
+ .../res/drawable-ldpi-160x128/fab_ic_keypad_ex.png | Bin 0 -> 22664 bytes
+ .../InCallUI/res/layout/call_card_sprd_pikel.xml   |  35 +-
+ .../src/com/android/incallui/CallCardFragment.java | 565 ++++++++++++++++++---
+ .../com/android/incallui/CallCardPresenter.java    |  40 ++
+ 10 files changed, 549 insertions(+), 98 deletions(-)
+ create mode 100644 packages/apps/Dialer/res/drawable-mdpi/hide_dialer.png
+ create mode 100644 packages/apps/InCallUI/res/drawable-ldpi-160x128/fab_ic_keypad_ex.png
+
+diff --git a/packages/apps/Dialer/res/drawable-mdpi/hide_dialer.png b/packages/apps/Dialer/res/drawable-mdpi/hide_dialer.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..e0da5371587342edc60733c5a05ef2e94e3c0dc0
+GIT binary patch
+literal 3046
+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
+
+literal 0
+HcmV?d00001
+
+diff --git a/packages/apps/Dialer/res/drawable-mdpi/ic_number_contact.png b/packages/apps/Dialer/res/drawable-mdpi/ic_number_contact.png
+index 53c0711a49b2b579f6044a2c1686dbff12ab0654..f6a33a08d19d87490e8e822b1f3841d6e7886222 100644
+GIT binary patch
+literal 3439
+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
+R*eU=3002ovPDHLkV1lXVfA;_Y
+
+literal 1342
+zcmeAS@N?(olHy`uVBq!ia0vp^3LwnE1|*BCs=fdz$r9IylHmNblJdl&R0hYC{G?O`
+z&)mfH)S%SFl*+=BsWuD@%xak-5hW46K32*3xq68pHF_1f1wh>l3^w)^1&PVosU-?Y
+zsp*+{wo31J?^jaDOtDo8H}y5}EpSfF$n>ZxN)4{^3rViZPPR-@vbR&PsjvbXkegbP
+zs8ErclUHn2VXFi-*9yo63F|8<fR&VF+bTgE72zA8;GAESs$i;TrkiYFX0Bjvsb^?v
+zZf;_(qhMrUXsT~utZ!_fYh-L?Vqj%rqyPm<K--E^(yW49+@N*=dA3R!B_#z``ugSN
+z<$C4Ddih1^`i7R4mih)p`bI{&Koz>hm3bwJ6}oxF$}kgLQj3#|G7CyF^YauyCMG83
+zmzLNn0bL65LT&-v*t}wBFaZNhzap_f-%!s0<RzFwUtj!6b93RUi%Wu15$?rmaB)aw
+zL8^XGYH@yPQ8F;%(v(3~6<9eJr6!i-7lq{K=fFZSAS1sdzc?emK*8A=9BK+0;hA|U
+z`Q^o$U_HLRR-SpqC5d^-sh%#jN<dTeGBZ=G%q?9^O-#(qU7VfF3=Lh)olM;<Eu9Qa
+z-ApW93>+=YV0vBhlS^|`^GaZPQxJMBaOwpmhui|7%`T}$nPsUdZbkXI3Se(rW#V>=
+zDNggCdQ)(_#SEujeV}9XL6M6T*)Sns3IZ|VNf*e0C;rqtV2UpSChbF-%`yxOjO#pI
+z978H@CH?vT-~O-zlbF!e&y0mS0>7CzG6@tje=Jw1<2-V^vBFTmUge}q0Ea+lbK{S%
+z^?x3S3y4ohP`k+Y;itcphVnJW9+xGIj0$zEN7ksgO}7%bue7A2lcRal$qh0ryE+41
+zd^qkfCZ!t5d=T%bZ1};hs(66&$fT5K25CuOj07k8{tudP)>5OCL8Jfw!UK%=fvgjs
+z+*6|Xx_*maIl-EJqU1oL!aq-5_BE=P88@$(%Ilb5FJL_(;iq&4-w)?r0ft5qq1yQl
+zC681WK02YYNp6N~_bHAxals9LI69vR&Sgtz;O^M}XySI3N5V@aPPio9;S!wi-#sf#
+z@hD@R!=9N9voalI7>?vz$r9{jER+?vue{Om6HmwQhKQMWTr`-E{B`*A)cz^MlmcGQ
+zLI>6@x$e0Jf*mtIS^`bw|Fc|oN2i?biJKpE1f(x6)czpX@wDLwcah$S1(TmDC~zFP
+z`r_t=$>(I1Y)jZ}7H(#)TO5A;lf$2eKE4g?kDN~^GQ2uJli_2gRCJAaRFK@E>k5Tz
+zN$Lt^Ep0sdtYUTT+cf(frA?(z<O*KoVPKJ9Fl;{1cf>rd7gVBoy85}Sb4q9e0Ix^Q
+A7XSbN
+
+diff --git a/packages/apps/Dialer/res/drawable-mdpi/ic_number_delete.png b/packages/apps/Dialer/res/drawable-mdpi/ic_number_delete.png
+index 8d68c7798381bb3f97367a6b9cfc636b58df4826..c8f3a798728f11de746c5111dd114daa199355f0 100644
+GIT binary patch
+literal 3565
+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
+
+literal 1455
+zcmeAS@N?(olHy`uVBq!ia0vp^20$#!!3HGX7`)F1Qj#UE5hcO-X(i=}MX3yqDfvmM
+z3ZA)%>8U}fi7AzZCsS=07?{;ELn2Bde0{8v^K<nQL2C3WatnaE85nHrD+&^mvr|hH
+zl2X$%^K6yg@7}MZkeOnu6mIHk;9KCFnvv;IRg@ZB<rk7%m7Q#vqGWHUU{hfQG$1#%
+zBvGLvHz%*ys=`(YY_1iM4HDK@QUEI{$+lI3I4Z(7K*2e`C{@8!&rCPjz|361+)~fb
+z)ZE;}Tt~skz|d6Rz*yhdK-b9F%EZ9R#7F@Olz_GsrKDK}xwt{?0`hE?GD=Dctn~HE
+z%ggo3jrH=2()A53EiLs8jP#9+bb%^#i!1X=5-W7`ij`p|xTF>*7iAWdWaj57fJ{tG
+z$}cUkRRX#c;)UD-xUqS~&|m@vn0`fKfxe-h0mw@*g}%P{mFDKcRTq~8r6Sym)!^cg
+z%7Rq=pw#00(xPNw#HA^NtSYc_E=o--$uA1Y&(DE{Vn9ZINq%ugeu09sGdR=~G{Q6U
+zQu51-HNkp(eXTt6ic1pnl2bihY?Xkf=w)W6Seco*nOnNJ7`r$-nHd_onp?WLxLCM3
+zSvnb;nH#w}yTbIk<R_QrrskEv^rj&6n&8w6N)EXNK$~4si!#enQ{0O3a}~hew#vlq
+z7DJroLG`BKc8d{Cz4}1M=z}5`DY9Wgz!U^x!jmqL15f;^dB7B31WejS)yWzR3{3K#
+zE{-7;x30|C=*?^>akN^Cwfn|P7f12JQ0o`Vniuc|iIx-yu!y>ri2Y|2XE!%jXD<{K
+z6)arE7qlVNdPj+%W59%_fOf7V+jy^aGB59%?(}{m`NMIiTKW5@-k(%2@*L*)`#k9R
+z##r_nY>^*Wd+Zl+_%+0ZIVmZeQ2Jq#72W4+JL`bJr2}FS{0C0_Wc;ccIET&SX{>?#
+zf`{urN@cLHCm1Ds4u3rJNMM1Yf*rru0fil60>%8x4j5I4Z+d7H8SUU!P_#DUmU**u
+zpV<<>E0^**KSwY9<tO-p#Zy3-=k@HT-`OQtHK+g5j8f09oc39|G4I2x!b<OEj?ep6
+zIIG;4$A58~=R}STkJugVJ(rsMz~G^Zo#KbNT+D?56Q*R`@i`$7pP0Z@<9%+LpIS=C
+zdV>!uG@jm`IYIGW!ge98?MtRB@Nu2_Y+%8xY$O!vwvcgCanB8#e5Txe_x+qNswaNk
+zsLk(CF6m^oHu=X~<`#()nqu<HP8cN4X5V#Sv(v}rB9dx3yaKlz!zNa2K4I`M<3P>L
+zx$GZPEc4bX?VHuPhKD)r(oP{0gVUP#&K~LMxw~TLcKOBGrumr(eudQucb3}yd_UnC
+zOSZM<bH;4_cg5ehA{p8o`7MMx?pVH9nmd0_O47VF+nK|di{|Lazp8xS+Hu-+gQNg+
+zru}!P%MX^el{>i_Jb4<|v3KQ+#gjM8e^+jDbgy5_y(ZpWjy#=rxLLRT;WA**Gg<g$
+T+1lH=pd!@M)z4*}Q$iB}Pe}+w
+
+diff --git a/packages/apps/Dialer/res/drawable-mdpi/ic_number_dialer.png b/packages/apps/Dialer/res/drawable-mdpi/ic_number_dialer.png
+index 6057fb3e1cd55ac1b95b402b9c21f4a45043907f..c480548b0b65e115f45da8b597e3476c311b38ce 100644
+GIT binary patch
+literal 3477
+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
+D85o_v
+
+literal 1336
+zcmeAS@N?(olHy`uVBq!ia0vp^3LwnE1|*BCs=fdz$r9IylHmNblJdl&R0hYC{G?O`
+z&)mfH)S%SFl*+=BsWuD@%xak-5hW46K32*3xq68pHF_1f1wh>l3^w)^1&PVosU-?Y
+zsp*+{wo31J?^jaDOtDo8H}y5}EpSfF$n>ZxN)4{^3rViZPPR-@vbR&PsjvbXkegbP
+zs8ErclUHn2VXFi-*9yo63F|8<fR&VF+bTgE72zA8;GAESs$i;TrkiYFX0Bjvsb^?v
+zZf;_(qhMrUXsT~utZ!_fYh-L?Vqj%rqyPm<K--E^(yW49+@N*=dA3R!B_#z``ugSN
+z<$C4Ddih1^`i7R4mih)p`bI{&Koz>hm3bwJ6}oxF$}kgLQj3#|G7CyF^YauyCMG83
+zmzLNn0bL65LT&-v*t}wBFaZNhzap_f-%!s0<RzFwUtj!6b93RUi%Wu15$?rmaB)aw
+zL8^XGYH@yPQ8F;%(v(3~6<9eJr6!i-7lq{K=fFZSAS1sdzc?emK*8A=9BK+0;hA|U
+z`Q^o$U_HLRR-SpqC5d^-sh%#jN<dTeGBZ=G%#AEuEF4|UU7VfF3=Lh)EiIj$U0j{q
+zoSdAET%9ePVR~KilS^|`^GaZPQxJMBaOwpmhui|7%`T}$nPsUdZbkXI3Se(rW#V>=
+zDNggCdQ)(_#SEujeV}9XL6M6T*)Sns3IZ|VNf*e0C;rqtV2UpSChh#ILZ2BJ7*}|@
+zIEGZ*Ix^kbo7qv|_~yVP;ey$sI%}BB4m#zE=mft=->^~eivEI*hzJ&z`BOXQu2pDC
+zSQ@b+AvIahQAD>!q3qP%U-2_fXx(hzZl3nw_@v#E-;Uos_s-Qr)7X?(^+Pn%{?7^A
+zdm73O4jVqdzGoN1F}DpYN<WR0E}Yh4h&s?|a-4CygXgZ~j^GFPoD=MG85in0%r6VD
+zyzA6aw8BAk)2*-R{ZWi=m)>y1J~*{m?YwHilZo<;cX=)^Gk6ivke>OLb(!9YrcJI3
+znv>;!)Uig~G;HJbj&1y_bKnM-9IyWawkHwinRZ!bR`Oc^R}A3S(-nHWhH1)$@TV?o
+zTCC==N3d#SUi>5?=U~0vf!SiK$DHOgGe)mBO#Wh>wgJc098Mm7a9C+0Z_Bj%oM8u=
+zR_6X!abQjE%dMLFsp`PmvcG&H&8#ajt|=BW-sAaxg*`8N0)yzflTQ{}rJIB})H<#`
+zy&=L+XMtx98;6S{(<~Rwg$D{ZG^iQ9&A6C#yF$^FancL+>+_g`9lI|mU1WK7V0G%J
+xpAXEw2%K!>Ebypy@_Fug@p-?e@1x)bMutcI2iErJO8)|tWuC5nF6*2UngHOx*Zu$i
+
+diff --git a/packages/apps/Dialer/res/layout/dialpad.xml b/packages/apps/Dialer/res/layout/dialpad.xml
+index dd0edde..20a838f 100644
+--- a/packages/apps/Dialer/res/layout/dialpad.xml
++++ b/packages/apps/Dialer/res/layout/dialpad.xml
+@@ -23,6 +23,7 @@
+     android:orientation="vertical" >
+ 
+     <LinearLayout
++        android:id="@+id/dtmf_key_dialer"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:orientation="vertical" >
+@@ -47,7 +48,7 @@
+                 android:scrollHorizontally="true"
+                 android:singleLine="true"
+                 android:textAppearance="@style/DialtactsDigitsTextAppearance"
+-                android:textColor="#00ff00"
++                android:textColor="#ffffff"
+                 android:textCursorDrawable="@null" />
+             </LinearLayout>
+ <TableLayout
+@@ -273,7 +274,7 @@
+                     android:id="@id/dialpad_key_number"
+                     style="@style/DialpadKeyStarPoundStyle" />
+                 <ImageView
+-                    android:id="@+id/dialpad_key_voicemail"
++                    android:id="@+id/dialpad_key_contact_ic"
+                     style="@style/DialpadKeyLettersStyle"
+                     android:src="@drawable/ic_number_contact"
+                     android:scaleType="fitStart"
+diff --git a/packages/apps/Dialer/res/values/colors.xml b/packages/apps/Dialer/res/values/colors.xml
+index 8d2e607..3f5b18a 100644
+--- a/packages/apps/Dialer/res/values/colors.xml
++++ b/packages/apps/Dialer/res/values/colors.xml
+@@ -23,7 +23,7 @@
+     <!-- Background color of dialpad -->
+     <color name="background_dialpad">#00ffffff</color>
+     <!-- Pressed color of dialpad buttons -->
+-    <color name="background_dialpad_pressed">#ececec</color>
++    <color name="background_dialpad_pressed">#80ffffff</color>
+     <!-- Primary color of dialpad text, including the call button -->
+     <color name="dialpad_primary_text_color">#3B77E7</color>
+     <!-- Secondary color of dialpad text (used for the letters corresponding to each digit -->
+diff --git a/packages/apps/InCallUI/res/drawable-ldpi-160x128/fab_ic_keypad_ex.png b/packages/apps/InCallUI/res/drawable-ldpi-160x128/fab_ic_keypad_ex.png
+new file mode 100644
+index 0000000000000000000000000000000000000000..ff6e29a67671b389861c044afe8db735cf419677
+GIT binary patch
+literal 22664
+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
+RJ^V{IWd#lS0$GcI{{e}ut>gdz
+
+literal 0
+HcmV?d00001
+
+diff --git a/packages/apps/InCallUI/res/layout/call_card_sprd_pikel.xml b/packages/apps/InCallUI/res/layout/call_card_sprd_pikel.xml
+index d973d52..79bcc63 100644
+--- a/packages/apps/InCallUI/res/layout/call_card_sprd_pikel.xml
++++ b/packages/apps/InCallUI/res/layout/call_card_sprd_pikel.xml
+@@ -61,21 +61,34 @@
+             android:layout_gravity="bottom|center_horizontal"/>
+ 
+         <LinearLayout
++            android:id="@+id/dialer_and_end"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:paddingBottom="@dimen/start_end_call_button_margin_bottom"
+             android:layout_alignParentBottom="true"
+-            android:orientation="horizontal"
+-            android:gravity="center" >
+-           <ImageView
+-               android:id="@+id/end_call_button"
+-               android:layout_width="wrap_content"
+-               android:layout_height="wrap_content"
+-               android:src="@drawable/fab_ic_end_call_ex"
+-               android:scaleType="center"
+-               android:contentDescription="@string/description_target_decline"
+-               android:background="@null"
+-               android:visibility="gone"/>
++            android:orientation="horizontal">
++
++            <ImageView android:id="@+id/keypad_button"
++                android:layout_width="0dp"
++                android:layout_height="wrap_content"
++                android:layout_gravity="left"
++                android:layout_weight="1"
++                android:layout_marginLeft="@dimen/start_end_call_button_margin_left_right"
++                android:contentDescription="@string/description_target_answer"
++                android:src="@drawable/fab_ic_keypad_ex"
++                android:background="@null"
++                android:visibility="gone"/>
++
++            <ImageView android:id="@+id/end_call_button"
++                android:layout_width="0dp"
++                android:layout_height="wrap_content"
++                android:layout_weight="1"
++                android:layout_marginRight="@dimen/start_end_call_button_margin_left_right"
++                android:contentDescription="@string/description_target_decline"
++                android:layout_gravity="right"
++                android:src="@drawable/fab_ic_end_call_ex"
++                android:background="@null"
++                android:visibility="gone"/>
+        </LinearLayout>
+     </RelativeLayout>
+ 
+diff --git a/packages/apps/InCallUI/src/com/android/incallui/CallCardFragment.java b/packages/apps/InCallUI/src/com/android/incallui/CallCardFragment.java
+index a8ef563..2bb87cb 100644
+--- a/packages/apps/InCallUI/src/com/android/incallui/CallCardFragment.java
++++ b/packages/apps/InCallUI/src/com/android/incallui/CallCardFragment.java
+@@ -20,23 +20,38 @@ import android.animation.LayoutTransition;
+ import android.app.Activity;
+ import android.content.Context;
+ import android.content.Intent;
++import android.content.pm.ActivityInfo;
++import android.graphics.Color;
++import android.graphics.PixelFormat;
+ import android.graphics.drawable.Drawable;
+ import android.os.Bundle;
+ import android.os.SystemProperties;
+ import android.os.UserHandle;
+ import android.telephony.PhoneNumberUtils;
+ import android.telephony.TelephonyManager;
++import android.text.Editable;
+ import android.text.TextUtils;
++import android.text.method.DialerKeyListener;
++import android.util.DisplayMetrics;
+ import android.view.Gravity;
++import android.view.KeyEvent;
+ import android.view.LayoutInflater;
+ import android.view.View;
+ import android.view.View.OnClickListener;
+ import android.view.ViewGroup;
+ import android.view.ViewStub;
++import android.view.Window;
++import android.view.WindowManager;
+ import android.view.accessibility.AccessibilityEvent;
++import android.widget.EditText;
++import android.widget.FrameLayout;
+ import android.widget.ImageView;
++import android.widget.LinearLayout;
++import android.widget.TableLayout;
+ import android.widget.TextView;
+ 
++import com.android.dialer.dialpad.DialpadKeyButton;
++import com.android.dialer.dialpad.DigitsEditText;
+ import com.android.incallui.InCallPresenter.InCallState;
+ import com.android.internal.telephony.TelephonyIntents;
+ import com.android.services.telephony.common.Call;
+@@ -100,9 +115,19 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
+     private float mDensity;
+     private ImageView mRecordingIcon;
+     private TextView mRecordtext;
++    private ImageView mKeypadButton;
+     private ImageView mEndCallButton;
+     private TextView mSecondaryPhoneNumber;
+ 
++    private FrameLayout mLayout;
++    private FrameLayout mWindown;
++    private DialpadKeyButton one;
++    private DigitsEditText digtsEdit;
++    private DTMFKeyListener mDialerKeyListener;
++    private ImageView contact_image;
++    private DialpadKeyButton contact;
++    private DialpadKeyButton dialer;
++
+     @Override
+     CallCardPresenter.CallCardUi getUi() {
+         return this;
+@@ -122,24 +147,24 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
+     @Override
+     public void onActivityCreated(Bundle savedInstanceState) {
+         super.onActivityCreated(savedInstanceState);
+-
+         final CallList calls = CallList.getInstance();
+         final Call call = calls.getFirstCall();
+         getPresenter().init(getActivity(), call);
++        mWindown = (FrameLayout) getActivity().findViewById(R.id.main);
+     }
+ 
+     @Override
+     public View onCreateView(LayoutInflater inflater, ViewGroup container,
+-            Bundle savedInstanceState) {
++                             Bundle savedInstanceState) {
+         super.onCreateView(inflater, container, savedInstanceState);
+ 
+         mDensity = getResources().getDisplayMetrics().density;
+         View view;
+         // SPRD: add for Universe UI
+-        if(SprdUtils.PIKEL_UI_SUPPORT) {
++        if (SprdUtils.PIKEL_UI_SUPPORT) {
+             view = inflater.inflate(R.layout.call_card_sprd_pikel, container, false);
+             mSimManager = SimManager.get(getActivity());
+-        } else if (SprdUtils.UNIVERSE_UI_SUPPORT){
++        } else if (SprdUtils.UNIVERSE_UI_SUPPORT) {
+             view = inflater.inflate(R.layout.call_card_sprd, container, false);
+             mSimManager = SimManager.get(getActivity());
+         } else {
+@@ -160,7 +185,7 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
+ 
+         mPhoto = (ImageView) view.findViewById(R.id.photo);
+         /* SPRD bug 301615 add sim name color start */
+-        if(SprdUtils.PIKEL_UI_SUPPORT || SprdUtils.UNIVERSE_UI_SUPPORT){
++        if (SprdUtils.PIKEL_UI_SUPPORT || SprdUtils.UNIVERSE_UI_SUPPORT) {
+             mCallSimLabel = (TextView) view.findViewById(R.id.callSimLabel);
+         }
+         /* SPRD bug 301615 add sim name color end */
+@@ -172,20 +197,27 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
+ 
+         if (SprdUtils.PIKEL_UI_SUPPORT) {
+             mRecordingIcon = (ImageView) view.findViewById(R.id.recordingIcon);
+-            mRecordtext =  (TextView) view.findViewById(R.id.recordtext);
++            mRecordtext = (TextView) view.findViewById(R.id.recordtext);
+             if (mRecordingLabel != null && getActivity() != null
+-                    && ((InCallActivity)getActivity()).getRecorderState()!= null
+-                    && ((InCallActivity)getActivity()).getRecorderState().isActive()) {
++                    && ((InCallActivity) getActivity()).getRecorderState() != null
++                    && ((InCallActivity) getActivity()).getRecorderState().isActive()) {
+                 mRecordingLabel.setVisibility(View.VISIBLE);
+                 mRecordingIcon.setVisibility(View.VISIBLE);
+                 mRecordtext.setVisibility(View.VISIBLE);
+             }
+-            mEndCallButton = (ImageView)view.findViewById(R.id.end_call_button);
++            mKeypadButton = (ImageView) view.findViewById(R.id.keypad_button);
++            mKeypadButton.setOnClickListener(new View.OnClickListener() {
++                @Override
++                public void onClick(View v) {
++                    addDialPadView();
++                }
++            });
++            mEndCallButton = (ImageView) view.findViewById(R.id.end_call_button);
+             mEndCallButton.setOnClickListener(new View.OnClickListener() {
+                 @Override
+-                 public void onClick(View v) {
+-                     getPresenter().endCallClicked();
+-               }
++                public void onClick(View v) {
++                    getPresenter().endCallClicked();
++                }
+             });
+ 
+             //add for vt
+@@ -198,19 +230,64 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
+         mProviderLabel = (TextView) view.findViewById(R.id.providerLabel);
+         mProviderNumber = (TextView) view.findViewById(R.id.providerAddress);
+          */
+-        mProviderInfoStub = (ViewStub)view.findViewById(R.id.provider_info_stub);
++        mProviderInfoStub = (ViewStub) view.findViewById(R.id.provider_info_stub);
+         /*@} */
+         mSupplementaryInfoContainer =
+-            (ViewGroup) view.findViewById(R.id.supplementary_info_container);
++                (ViewGroup) view.findViewById(R.id.supplementary_info_container);
+ 
+         /* SPRD: for call geocode @ { */
+-        mGeocodeView = (TextView)view.findViewById(R.id.geocode);
+-        if(mGeocodeView != null){
++        mGeocodeView = (TextView) view.findViewById(R.id.geocode);
++        if (mGeocodeView != null) {
+             mGeocodeView.setVisibility(GeocodeHelper.isSupportSprdGeocode() ? View.VISIBLE : View.GONE);
+         }
+         /* @} */
+     }
+ 
++    private void addDialPadView() {
++        Log.d("pepsl", "----addDialPadView----");
++        LayoutInflater mInflater = LayoutInflater.from(getActivity());
++        mLayout = (FrameLayout) mInflater.inflate(R.layout.dialpad, null);
++        mLayout.setKeepScreenOn(true);
++        addView(mLayout, "DialpadView");
++        contact_image = (ImageView) mLayout.findViewById(R.id.dialpad_key_contact_ic);
++        contact_image.setImageDrawable(null);
++        contact_image.setBackgroundResource(R.drawable.hide_dialer);
++    }
++
++    private void addView(View mView, String title) {
++        Log.d("pepsl", "----addview----start");
++        WindowManager.LayoutParams lp = new WindowManager.LayoutParams(
++                ViewGroup.LayoutParams.WRAP_CONTENT,
++                ViewGroup.LayoutParams.WRAP_CONTENT,
++                WindowManager.LayoutParams.TYPE_APPLICATION,
++//                WindowManager.LayoutParams.TYPE_PHONE,
++                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
++                        | WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
++                PixelFormat.TRANSLUCENT);
++        //lp.gravity = isPassButton?Gravity.LEFT | Gravity.BOTTOM:Gravity.RIGHT | Gravity.BOTTOM;
++        lp.flags = WindowManager.LayoutParams.FLAG_FULLSCREEN;
++        lp.x = 0;
++        lp.y = 0;
++        lp.width = 240;
++        lp.height = 240;
++        if (mWindown != null) {
++            mWindown.addView(mView, lp);
++            Log.d("pepsl", " isvisiable = " + (mView.getVisibility() == View.VISIBLE) + " mView.d = " + mView.getMeasuredWidth() + " mView.h = " + mView.getMeasuredHeight()
++                    + " mWindow.d = " + mWindown.getMeasuredWidth() + " mWindow.h = " + mWindown.getMeasuredHeight() + " mWindow.isvisiable = " + (mWindown.getVisibility() == View.VISIBLE));
++        }
++        Log.d("pepsl", "-------end----------");
++//        one = (DialpadKeyButton) mView.findViewById(R.id.one);
++//        digtsEdit = (DigitsEditText) mView.findViewById(R.id.digits);
++//        one.setOnClickListener(new View.OnClickListener(){
++//            @Override
++//            public void onClick(View v) {
++//                Log.d("pepsl","press one!");
++//                //digtsEdit.append("1");
++//            }
++//        });
++        initDialpadViews(mView);
++    }
++
+     @Override
+     public void setVisible(boolean on) {
+         if (on) {
+@@ -226,9 +303,9 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
+             mPrimaryName.setText("");
+         } else {
+             /* SPRD: add for bug325479 @ { */
+-            if(isRealNoName){
++            if (isRealNoName) {
+                 mPrimaryName.setText(getActivity().getString(R.string.unknown_contacts));
+-            }else{
++            } else {
+                 mPrimaryName.setText(name);
+             }
+             /* @} */
+@@ -291,7 +368,7 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
+ 
+     @Override
+     public void setPrimary(String number, String name, boolean nameIsNumber, String label,
+-            Drawable photo, boolean isConference, boolean isGeneric, boolean isSipCall, boolean isRealNoName) {
++                           Drawable photo, boolean isConference, boolean isGeneric, boolean isSipCall, boolean isRealNoName) {
+         Log.d(this, "Setting primary call");
+ 
+         if (isConference) {
+@@ -307,8 +384,8 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
+         /* @} */
+         /* SPRD: add for bug671746 @{ */
+         if (nameIsNumber) {
+-             mPhoneNumber.setVisibility(View.GONE);
+-        }else{
++            mPhoneNumber.setVisibility(View.GONE);
++        } else {
+             setPrimaryPhoneNumber(number);
+         }
+         /* @} */
+@@ -324,21 +401,21 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
+             setDrawableToImageView(mPhoto, photo);
+         }
+ 
+-        if(SprdUtils.UNIVERSE_UI_SUPPORT){
++        if (SprdUtils.UNIVERSE_UI_SUPPORT) {
+             /* SPRD: add for UniverseUI @{ */
+-            if((number != null && !number.equals(mCallNumber))
+-                    || (name != null && !name.equals(mCallName))){
++            if ((number != null && !number.equals(mCallNumber))
++                    || (name != null && !name.equals(mCallName))) {
+                 mCallNumber = number;
+                 mCallName = name;
+ 
+                 if (number != null && PhoneNumberUtils.isEmergencyNumber(number)) {
+-                    if(mPrimaryName != null) mPrimaryName.setText("");
++                    if (mPrimaryName != null) mPrimaryName.setText("");
+                     Log.d(this, "Primary call is Emergency Call!");
+                     return;
+                 }
+ 
+-                if(getActivity() != null){
+-                    InCallActivity activity = (InCallActivity)getActivity();
++                if (getActivity() != null) {
++                    InCallActivity activity = (InCallActivity) getActivity();
+                     activity.checkNumberIsShouldBeSave(CallList.getInstance().getOutgoingCall());
+                 }
+             }
+@@ -348,7 +425,7 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
+ 
+     @Override
+     public void setSecondary(boolean show, String name, boolean nameIsNumber, String label,
+-            Drawable photo, boolean isConference, boolean isGeneric) {
++                             Drawable photo, boolean isConference, boolean isGeneric) {
+ 
+         if (show) {
+             if (isConference) {
+@@ -365,7 +442,7 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
+                 nameDirection = View.TEXT_DIRECTION_LTR;
+             }
+             mSecondaryCallName.setTextDirection(nameDirection);
+-            if(!SprdUtils.UNIVERSE_UI_SUPPORT){
++            if (!SprdUtils.UNIVERSE_UI_SUPPORT) {
+                 setDrawableToImageView(mSecondaryPhoto, photo);// SPRD: add for Universe UI
+             }
+         } else {
+@@ -375,7 +452,7 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
+ 
+     @Override
+     public void setSecondary(boolean show, String number, String name, boolean nameIsNumber, String label,
+-            Drawable photo, boolean isConference, boolean isGeneric) {
++                             Drawable photo, boolean isConference, boolean isGeneric) {
+ 
+         if (show) {
+             if (isConference) {
+@@ -400,7 +477,7 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
+     @Override
+     public void setSecondaryImage(Drawable image) {
+         if (image != null) {
+-            if(!SprdUtils.PIKEL_UI_SUPPORT && !SprdUtils.UNIVERSE_UI_SUPPORT){
++            if (!SprdUtils.PIKEL_UI_SUPPORT && !SprdUtils.UNIVERSE_UI_SUPPORT) {
+                 setDrawableToImageView(mSecondaryPhoto, image);// SPRD: add for Universe UI
+             }
+         }
+@@ -408,12 +485,12 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
+ 
+     /**
+      * SPRD:
+-     * @orig setCallState(int, Call.DisconnectCause, boolean,String, String)
+      *
++     * @orig setCallState(int, Call.DisconnectCause, boolean, String, String)
+      */
+     @Override
+     public void setCallState(int phoneId, int state, Call.DisconnectCause cause, boolean bluetoothOn,
+-            String gatewayLabel, String gatewayNumber) {
++                             String gatewayLabel, String gatewayNumber) {
+         String callStateLabel = null;
+         /* SPRD bug 301615 add sim name color start */
+         final Context context = getView().getContext();
+@@ -426,15 +503,14 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
+                 : getCallStateLabelFromState(phoneId, state, cause);
+         /* SPRD bug 301615 add sim name color start */
+         // SPRD bug 723087 wificalling icon
+-        if (getPresenter().isWifiCall()){
++        if (getPresenter().isWifiCall()) {
+             mWifiCallView.setVisibility(View.VISIBLE);
+             callSimNameLabel = context.getResources().getString(R.string.wifi_call);
+-        }
+-        else{
++        } else {
+             callSimNameLabel = getCallSimNameLabel(phoneId);
+             mWifiCallView.setVisibility(View.GONE);
+         }
+-        if(mSimManager != null){
++        if (mSimManager != null) {
+             SimColor = mSimManager.getColor(phoneId);
+         }
+         /* SPRD bug 301615 add sim name color end */
+@@ -454,36 +530,36 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
+             mSupplementaryInfoContainer.setLayoutTransition(null);
+         }
+ 
+-        if (SprdUtils.PIKEL_UI_SUPPORT){
+-               if (!TextUtils.isEmpty(callSimNameLabel) && (Call.State.isDialing(state)
+-                        || (Call.State.INCOMING == state)
+-                        || (Call.State.CALL_WAITING == state)
+-                        || (Call.State.ACTIVE == state)
+-                        || (Call.State.ONHOLD == state))){
+-                   mCallSimLabel.setVisibility(View.GONE);
+-                   mCallSimLabel.setText(callSimNameLabel);
++        if (SprdUtils.PIKEL_UI_SUPPORT) {
++            if (!TextUtils.isEmpty(callSimNameLabel) && (Call.State.isDialing(state)
++                    || (Call.State.INCOMING == state)
++                    || (Call.State.CALL_WAITING == state)
++                    || (Call.State.ACTIVE == state)
++                    || (Call.State.ONHOLD == state))) {
++                mCallSimLabel.setVisibility(View.GONE);
++                mCallSimLabel.setText(callSimNameLabel);
+             } else {
+                 mCallSimLabel.setVisibility(View.GONE);
+             }
+         } else
+ 
+         /* SPRD bug 301615 add sim name color start */
+-        if(SprdUtils.UNIVERSE_UI_SUPPORT){
+-            if(!TextUtils.isEmpty(callSimNameLabel)
+-                    && (Call.State.isDialing(state)
+-                            || (Call.State.INCOMING == state)
+-                            || (Call.State.CALL_WAITING == state)
+-                            || (Call.State.ACTIVE == state)
+-                            || (Call.State.ONHOLD == state))){
+-                mCallSimLabel.setVisibility(View.VISIBLE);
+-                mCallSimLabel.setText(callSimNameLabel);
+-                mCallSimLabel.setTextColor(SimColor);
++            if (SprdUtils.UNIVERSE_UI_SUPPORT) {
++                if (!TextUtils.isEmpty(callSimNameLabel)
++                        && (Call.State.isDialing(state)
++                        || (Call.State.INCOMING == state)
++                        || (Call.State.CALL_WAITING == state)
++                        || (Call.State.ACTIVE == state)
++                        || (Call.State.ONHOLD == state))) {
++                    mCallSimLabel.setVisibility(View.VISIBLE);
++                    mCallSimLabel.setText(callSimNameLabel);
++                    mCallSimLabel.setTextColor(SimColor);
+ 
+-            } else{
+-                mCallSimLabel.setVisibility(View.GONE);
+-            }
++                } else {
++                    mCallSimLabel.setVisibility(View.GONE);
++                }
+ 
+-        }
++            }
+         /* SPRD bug 301615 add sim name color end */
+         /* SPRD: add for HIGH_DEF_AUDIO @{ */
+         if ("cucc".equals(SystemProperties.get("ro.operator"))
+@@ -522,7 +598,7 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
+             // In that rare case, the gravity needs to be reset to the right.
+             // Also, setText("") is used since there is a delay in making the view GONE,
+             // so the user will otherwise see the text jump to the right side before disappearing.
+-            if(!SprdUtils.PIKEL_UI_SUPPORT && mCallStateLabel.getGravity() != Gravity.END && !SprdUtils.UNIVERSE_UI_SUPPORT) {// SPRD: add for Universe UI
++            if (!SprdUtils.PIKEL_UI_SUPPORT && mCallStateLabel.getGravity() != Gravity.END && !SprdUtils.UNIVERSE_UI_SUPPORT) {// SPRD: add for Universe UI
+                 mCallStateLabel.setText("");
+                 mCallStateLabel.setGravity(Gravity.END);
+             }
+@@ -536,19 +612,19 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
+             mProviderLabel.setText(gatewayLabel);
+             mProviderNumber.setText(gatewayNumber);
+              */
+-            if(mProviderInfoStub != null && mProviderInfoView == null){
++            if (mProviderInfoStub != null && mProviderInfoView == null) {
+                 mProviderInfoView = mProviderInfoStub.inflate();
+                 mProviderInfo = mProviderInfoView.findViewById(R.id.providerInfo);
+                 mProviderLabel = (TextView) mProviderInfoView.findViewById(R.id.providerLabel);
+                 mProviderNumber = (TextView) mProviderInfoView.findViewById(R.id.providerAddress);
+             }
+-            if(mProviderInfo != null){
++            if (mProviderInfo != null) {
+                 mProviderInfo.setVisibility(View.VISIBLE);
+             }
+-            if(mProviderLabel != null){
++            if (mProviderLabel != null) {
+                 mProviderLabel.setText(gatewayLabel);
+             }
+-            if(mProviderNumber != null){
++            if (mProviderNumber != null) {
+                 mProviderNumber.setText(gatewayNumber);
+             }
+             /* @} */
+@@ -558,7 +634,7 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
+              * @Orig:
+             mProviderInfo.setVisibility(View.GONE);
+              */
+-            if(mProviderInfo != null){
++            if (mProviderInfo != null) {
+                 mProviderInfo.setVisibility(View.GONE);
+             }
+             /* @} */
+@@ -591,13 +667,13 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
+             Log.d(this, "callTimeElapsed: " + callTimeElapsed);
+             /* @} */
+             mElapsedTime.setText(callTimeElapsed);
+-            if(SprdUtils.UNIVERSE_UI_SUPPORT && callTimeElapsed != null){
++            if (SprdUtils.UNIVERSE_UI_SUPPORT && callTimeElapsed != null) {
+                 mCallTime = callTimeElapsed;//SPRD:add for Universe UI
+             }
+         } else {
+             // hide() animation has no effect if it is already hidden.
+             // SPRD: add for Universe UI
+-            if(SprdUtils.UNIVERSE_UI_SUPPORT){
++            if (SprdUtils.UNIVERSE_UI_SUPPORT) {
+                 AnimationUtils.Fade.hide(mElapsedTime, View.GONE);
+             } else {
+                 AnimationUtils.Fade.hide(mElapsedTime, View.INVISIBLE);
+@@ -608,7 +684,7 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
+     private void setDrawableToImageView(ImageView view, Drawable photo) {
+         if (photo == null) {
+             int photoResId;
+-            if(SprdUtils.UNIVERSE_UI_SUPPORT){
++            if (SprdUtils.UNIVERSE_UI_SUPPORT) {
+                 photoResId = R.drawable.picture_unknown_sprd;// SPRD: add for Universe UI
+             } else {
+                 photoResId = R.drawable.picture_unknown;
+@@ -636,7 +712,7 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
+         Log.v(this, "isGenericPhoto: " + isGeneric);
+         final int resId;
+         // SPRD: add for Universe UI
+-        if(SprdUtils.UNIVERSE_UI_SUPPORT){
++        if (SprdUtils.UNIVERSE_UI_SUPPORT) {
+             resId = isGeneric ? R.drawable.picture_dialing : R.drawable.picture_conference_sprd;
+         } else {
+             resId = isGeneric ? R.drawable.picture_dialing : R.drawable.picture_conference;
+@@ -662,8 +738,9 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
+     /**
+      * Gets the call state label based on the state of the call and
+      * cause of disconnect
+-     *
++     * <p>
+      * SPRD: modify
++     *
+      * @orig getCallStateLabelFromState(int, Call.DisconnectCause)
+      */
+     private String getCallStateLabelFromStatePikel(int phoneId, int state, Call.DisconnectCause cause) {
+@@ -712,8 +789,9 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
+     /**
+      * Gets the call state label based on the state of the call and
+      * cause of disconnect
+-     *
++     * <p>
+      * SPRD: modify
++     *
+      * @orig getCallStateLabelFromState(int, Call.DisconnectCause)
+      */
+     private String getCallStateLabelFromState(int phoneId, int state, Call.DisconnectCause cause) {
+@@ -721,7 +799,7 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
+         String callStateLabel = null;  // Label to display as part of the call banner
+         /* SPRD: add message to show which sim is active @{ */
+         String sim_msg = "";
+-        if(!SprdUtils.UNIVERSE_UI_SUPPORT){
++        if (!SprdUtils.UNIVERSE_UI_SUPPORT) {
+             /*    callStateLabel = "";
+             if(mSimManager != null){
+                 Sim sim = mSimManager.getSimById(phoneId);
+@@ -776,15 +854,16 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
+ 
+         return callStateLabel;
+     }
++
+     /* SPRD: bug 301615 add sim name color end */
+     private String getCallSimNameLabel(int phoneId) {
+         String sim_msg = "";
+-        if(SprdUtils.PIKEL_UI_SUPPORT || SprdUtils.UNIVERSE_UI_SUPPORT){
+-            if(mSimManager != null){
++        if (SprdUtils.PIKEL_UI_SUPPORT || SprdUtils.UNIVERSE_UI_SUPPORT) {
++            if (mSimManager != null) {
+                 Sim sim = mSimManager.getSimById(phoneId);
+-                if(sim != null && phoneId != CallCardPresenter.INVALID_PHONE_ID){
+-                    if(TelephonyManager.getPhoneCount() > 1){
+-                        int supportMainSolt = Settings.Secure.getInt(this.getView().getContext().getContentResolver(), Settings.Secure.SERVICE_PRIMARY_CARD,-1);
++                if (sim != null && phoneId != CallCardPresenter.INVALID_PHONE_ID) {
++                    if (TelephonyManager.getPhoneCount() > 1) {
++                        int supportMainSolt = Settings.Secure.getInt(this.getView().getContext().getContentResolver(), Settings.Secure.SERVICE_PRIMARY_CARD, -1);
+                         if (supportMainSolt == phoneId) {
+                             sim_msg = this.getString(R.string.main_card_slot)
+                                     + sim.getName();
+@@ -805,6 +884,7 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
+         return sim_msg;
+     }
+     /* SPRD: bug 301615 add sim name color end */
++
+     /**
+      * Maps the disconnect cause to a resource string.
+      */
+@@ -935,15 +1015,17 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
+     }
+ 
+     /* SPRD: Add for record */
+-    public void setRecordText(String str){
++    public void setRecordText(String str) {
+         mRecordingLabel.setText(str);
+     }
++
+     /* SPRD: Add for record */
+-    public TextView getRecordingLabel(){
++    public TextView getRecordingLabel() {
+         return mRecordingLabel;
+     }
++
+     /* SPRD: Add for record */
+-    public void setRecordingVisibility(int visibility){
++    public void setRecordingVisibility(int visibility) {
+         mRecordingLabel.setVisibility(visibility);
+         if (SprdUtils.PIKEL_UI_SUPPORT) {
+             mRecordingIcon.setVisibility(visibility);
+@@ -954,21 +1036,26 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
+     /**
+      * SPRD:
+      * add for Universe UI
++     *
+      * @{
+      */
+     String mCallNumber = null;
+     String mCallName = null;
+     String mCallTime = null;
+-    public String getCallNumber(){
++
++    public String getCallNumber() {
+         return mCallNumber;
+     }
+-    public String getCallName(){
++
++    public String getCallName() {
+         return mCallName;
+     }
+-    public String getCallTime(){
++
++    public String getCallTime() {
+         return mCallTime;
+     }
+-    public void clearCallParameters(){
++
++    public void clearCallParameters() {
+         mCallNumber = null;
+         mCallName = null;
+         mCallTime = null;
+@@ -979,6 +1066,23 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
+     @Override
+     public void displayEndCallButton(boolean visible) {
+         mEndCallButton.setVisibility(visible ? View.VISIBLE : View.GONE);
++        mKeypadButton.setVisibility(visible ? View.VISIBLE : View.GONE);
++    }
++
++    @Override
++    public void appendDigitsToField(char digit) {
++        if (digtsEdit != null) {
++            // TODO: maybe *don't* manually append this digit if
++            // mDialpadDigits is focused and this key came from the HW
++            // keyboard, since in that case the EditText field will
++            // get the key event directly and automatically appends
++            // whetever the user types.
++            // (Or, a cleaner fix would be to just make mDialpadDigits
++            // *not* handle HW key presses.  That seems to be more
++            // complicated than just setting focusable="false" on it,
++            // though.)
++            digtsEdit.getText().append(digit);
++        }
+     }
+ 
+     public float getSpaceBesideCallCard() {
+@@ -989,4 +1093,297 @@ public class CallCardFragment extends BaseFragment<CallCardPresenter, CallCardPr
+         }
+     }
+ 
++    public class DTMFKeyListener extends DialerKeyListener {
++
++        public DTMFKeyListener() {
++            super();
++        }
++
++        /**
++         * Overriden to return correct DTMF-dialable characters.
++         */
++        @Override
++        protected char[] getAcceptedChars() {
++            return DTMF_CHARACTERS;
++        }
++
++        /**
++         * special key listener ignores backspace.
++         */
++        @Override
++        public boolean backspace(View view, Editable content, int keyCode,
++                                 KeyEvent event) {
++            return false;
++        }
++
++        /**
++         * Return true if the keyCode is an accepted modifier key for the
++         * dialer (ALT or SHIFT).
++         */
++        private boolean isAcceptableModifierKey(int keyCode) {
++            switch (keyCode) {
++                case KeyEvent.KEYCODE_ALT_LEFT:
++                case KeyEvent.KEYCODE_ALT_RIGHT:
++                case KeyEvent.KEYCODE_SHIFT_LEFT:
++                case KeyEvent.KEYCODE_SHIFT_RIGHT:
++                    return true;
++                default:
++                    return false;
++            }
++        }
++
++        /**
++         * Overriden so that with each valid button press, we start sending
++         * a dtmf code and play a local dtmf tone.
++         */
++        @Override
++        public boolean onKeyDown(View view, Editable content,
++                                 int keyCode, KeyEvent event) {
++            // if (DBG) log("DTMFKeyListener.onKeyDown, keyCode " + keyCode + ", view " + view);
++            Log.d("pepsl", "onKeyDown keycode = " + keyCode);
++            // find the character
++            char c = (char) lookup(event, content);
++
++            // SPRD: Modified for bug 353752
++            // if not a long press, and /* parent onKeyDown accepts the input */ input char is not null.
++            if (event.getRepeatCount() == 0 /*&& super.onKeyDown(view, content, keyCode, event)*/ && c != 0) {
++                boolean keyOK = ok(getAcceptedChars(), c);
++
++                // if the character is a valid dtmf code, start playing the tone and send the
++                // code.
++                if (keyOK) {
++                    Log.d(this, "DTMFKeyListener reading '" + c + "' from input.");
++                    getPresenter().processDtmf(c);
++                } else {
++                    Log.d(this, "DTMFKeyListener rejecting '" + c + "' from input.");
++                }
++                return true;
++            }
++            if(keyCode == KeyEvent.KEYCODE_DEL){
++                return super.backspace(view,content,keyCode,event);
++            }
++            return false;
++        }
++
++        /**
++         * Overriden so that with each valid button up, we stop sending
++         * a dtmf code and the dtmf tone.
++         */
++        @Override
++        public boolean onKeyUp(View view, Editable content,
++                               int keyCode, KeyEvent event) {
++            // if (DBG) log("DTMFKeyListener.onKeyUp, keyCode " + keyCode + ", view " + view);
++            Log.d("pepsl", "onKeyUp keycode = " + keyCode);
++            super.onKeyUp(view, content, keyCode, event);
++
++            // find the character
++            char c = (char) lookup(event, content);
++
++            boolean keyOK = ok(getAcceptedChars(), c);
++
++            if (keyOK) {
++                Log.d(this, "Stopping the tone for '" + c + "'");
++                getPresenter().stopTone();
++                return true;
++            }
++
++            return false;
++        }
++
++        /**
++         * Handle individual keydown events when we DO NOT have an Editable handy.
++         */
++        public boolean onKeyDown(KeyEvent event) {
++            char c = lookup(event);
++            Log.d(this, "DTMFKeyListener.onKeyDown: event '" + c + "'");
++
++            // if not a long press, and parent onKeyDown accepts the input
++            if (event.getRepeatCount() == 0 && c != 0) {
++                // if the character is a valid dtmf code, start playing the tone and send the
++                // code.
++                if (ok(getAcceptedChars(), c)) {
++                    Log.d(this, "DTMFKeyListener reading '" + c + "' from input.");
++                    getPresenter().processDtmf(c);
++                    return true;
++                } else {
++                    Log.d(this, "DTMFKeyListener rejecting '" + c + "' from input.");
++                }
++            }
++            return false;
++        }
++
++        /**
++         * Handle individual keyup events.
++         *
++         * @param event is the event we are trying to stop.  If this is null,
++         *              then we just force-stop the last tone without checking if the event
++         *              is an acceptable dialer event.
++         */
++        public boolean onKeyUp(KeyEvent event) {
++            if (event == null) {
++                //the below piece of code sends stopDTMF event unnecessarily even when a null event
++                //is received, hence commenting it.
++                /*if (DBG) log("Stopping the last played tone.");
++                stopTone();*/
++                return true;
++            }
++
++            char c = lookup(event);
++            Log.d(this, "DTMFKeyListener.onKeyUp: event '" + c + "'");
++
++            // TODO: stopTone does not take in character input, we may want to
++            // consider checking for this ourselves.
++            if (ok(getAcceptedChars(), c)) {
++                Log.d(this, "Stopping the tone for '" + c + "'");
++                getPresenter().stopTone();
++                return true;
++            }
++
++            return false;
++        }
++
++        /**
++         * Find the Dialer Key mapped to this event.
++         *
++         * @return The char value of the input event, otherwise
++         * 0 if no matching character was found.
++         */
++        public char lookup(KeyEvent event) {
++            // This code is similar to {@link DialerKeyListener#lookup(KeyEvent, Spannable) lookup}
++            int meta = event.getMetaState();
++            int number = event.getNumber();
++
++            if (!((meta & (KeyEvent.META_ALT_ON | KeyEvent.META_SHIFT_ON)) == 0) || (number == 0)) {
++                int match = event.getMatch(getAcceptedChars(), meta);
++                number = (match != 0) ? match : number;
++            }
++
++            return (char) number;
++        }
++
++        /**
++         * Check to see if the keyEvent is dialable.
++         */
++        boolean isKeyEventAcceptable(KeyEvent event) {
++            return (ok(getAcceptedChars(), lookup(event)));
++        }
++
++        /**
++         * Overrides the characters used in {@link DialerKeyListener#CHARACTERS}
++         * These are the valid dtmf characters.
++         */
++        public final char[] DTMF_CHARACTERS = new char[]{
++                '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '#', '*'
++        };
++    }
++
++    /* SPRD: Add for Universe UI @{ */
++    private ViewStub mDialpadStub;
++    private View mDialpadView;
++
++    private void initDialpadViews(View view) {
++        mDialpadView = view.findViewById(R.id.dtmf_key_dialer);
++        digtsEdit = (DigitsEditText) view.findViewById(R.id.digits);
++        contact = (DialpadKeyButton) view.findViewById(R.id.contact);
++        dialer = (DialpadKeyButton) view.findViewById(R.id.dialer);
++        digtsEdit.setCursorVisible(true);
++        if (digtsEdit != null) {
++            mDialerKeyListener = new DTMFKeyListener();
++            digtsEdit.setKeyListener(mDialerKeyListener);
++            // remove the long-press context menus that support
++            // the edit (copy / paste / select) functions.
++            digtsEdit.setLongClickable(false);
++
++            View button;
++            int viewId;
++            final int[] buttonIds = new int[]{R.id.zero, R.id.one, R.id.two, R.id.three, R.id.four,
++                    R.id.five, R.id.six, R.id.seven, R.id.eight, R.id.nine, R.id.star, R.id.pound,
++                    R.id.contact,R.id.dialer,R.id.delete};
++            for (int i = 0; i < buttonIds.length; i++) {
++                viewId = buttonIds[i];
++                // locate the view
++                button = view.findViewById(viewId);
++                // Setup the listeners for the buttons
++                button.setClickable(true);
++                button.setOnClickListener(numberListener);
++            }
++        }
++    }
++
++    /* @}
++     */
++    private OnClickListener numberListener = new OnClickListener() {
++        @Override
++        public void onClick(View v) {
++            switch (v.getId()){
++                case R.id.one:
++                    keyPressed(KeyEvent.KEYCODE_1);
++                    break;
++                case R.id.two:
++                    keyPressed(KeyEvent.KEYCODE_2);
++                    break;
++                case R.id.three:
++                    keyPressed(KeyEvent.KEYCODE_3);
++                    break;
++                case R.id.four:
++                    keyPressed(KeyEvent.KEYCODE_4);
++                    break;
++                case R.id.five:
++                    keyPressed(KeyEvent.KEYCODE_5);
++                    break;
++                case R.id.six:
++                    keyPressed(KeyEvent.KEYCODE_6);
++                    break;
++                case R.id.seven:
++                    keyPressed(KeyEvent.KEYCODE_7);
++                    break;
++                case R.id.eight:
++                    keyPressed(KeyEvent.KEYCODE_8);
++                    break;
++                case R.id.nine:
++                    keyPressed(KeyEvent.KEYCODE_9);
++                    break;
++                case R.id.zero:
++                    keyPressed(KeyEvent.KEYCODE_0);
++                    break;
++                case R.id.star:
++                    keyPressed(KeyEvent.KEYCODE_STAR);
++                    break;
++                case R.id.pound:
++                    keyPressed(KeyEvent.KEYCODE_POUND);
++                    break;
++                case R.id.contact:
++                    mWindown.removeView(mLayout);
++                    break;
++                case R.id.delete:
++                    keyPressed(KeyEvent.KEYCODE_DEL);
++                    break;
++                default:
++                    break;
++            }
++        }
++    };
++
++    private void keyPressed(int keyCode) {
++        /* SPRD: Optimization of digits input
++         *{*/
++        KeyEvent event = new KeyEvent(KeyEvent.ACTION_DOWN, keyCode);
++        digtsEdit.onKeyDown(keyCode, event);
++        digtsEdit.onKeyUp(keyCode,event);
++            if (!TextUtils.isEmpty(digtsEdit.getText())) {
++                digtsEdit.setSelection(digtsEdit.getText().length());
++            }
++        /*
++         * SPRD: Optimization of digits input
++         * @orig: transaction.commit();
++         * KeyEvent event = new KeyEvent(KeyEvent.ACTION_DOWN, keyCode);
++         * mDigits.onKeyDown(keyCode, event);
++         * *}*/
++
++        // If the cursor is at the end of the text we hide it.
++        final int length = digtsEdit.length();
++        if (length == digtsEdit.getSelectionStart() && length == digtsEdit.getSelectionEnd()) {
++            digtsEdit.setCursorVisible(false);
++        }
++    }
+ }
+diff --git a/packages/apps/InCallUI/src/com/android/incallui/CallCardPresenter.java b/packages/apps/InCallUI/src/com/android/incallui/CallCardPresenter.java
+index cf10d56..ba13f62 100644
+--- a/packages/apps/InCallUI/src/com/android/incallui/CallCardPresenter.java
++++ b/packages/apps/InCallUI/src/com/android/incallui/CallCardPresenter.java
+@@ -556,6 +556,45 @@ public class CallCardPresenter extends Presenter<CallCardPresenter.CallCardUi>
+         }
+     }
+ 
++    /**
++     * Processes the specified digit as a DTMF key, by playing the
++     * appropriate DTMF tone, and appending the digit to the EditText
++     * field that displays the DTMF digits sent so far.
++     *
++     * @see #processDtmf(char, boolean)
++     */
++    public final void processDtmf(char c) {
++        processDtmf(c, false);
++    }
++
++    /**
++     * Processes the specified digit as a DTMF key, by playing the appropriate
++     * DTMF tone (or short tone if requested), and appending the digit to the
++     * EditText field that displays the DTMF digits sent so far.
++     */
++    public final void processDtmf(char c, boolean timedShortTone) {
++        Log.d(this, "Processing dtmf key " + c);
++        // if it is a valid key, then update the display and send the dtmf tone.
++        if (PhoneNumberUtils.is12Key(c)) {
++            Log.d(this, "updating display and sending dtmf tone for '" + c + "'");
++
++            // Append this key to the "digits" widget.
++            getUi().appendDigitsToField(c);
++            // Plays the tone through CallCommandService
++            CallCommandClient.getInstance().playDtmfTone(c, timedShortTone);
++        } else {
++            Log.d(this, "ignoring dtmf request for '" + c + "'");
++        }
++    }
++
++    /**
++     * Stops the local tone based on the phone type.
++     */
++    public void stopTone() {
++        Log.d(this, "stopping remote tone");
++        CallCommandClient.getInstance().stopDtmfTone();
++    }
++
+     public interface CallCardUi extends Ui {
+         void setVisible(boolean on);
+         void setPrimary(String number, String name, boolean nameIsNumber, String label,
+@@ -574,5 +613,6 @@ public class CallCardPresenter extends Presenter<CallCardPresenter.CallCardUi>
+         void setPrimaryPhoneNumber(String phoneNumber);
+         void setPrimaryLabel(String label);
+         void displayEndCallButton(boolean showEndCall);
++        void appendDigitsToField(char digit);
+     }
+ }
+-- 
+1.9.1
+
